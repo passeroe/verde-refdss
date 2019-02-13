@@ -34,14 +34,14 @@ lapply(packages,library,character.only=TRUE)
 iric.process.smr <- function(wd,inMet) {
 
 # Set this to the IRIC_Processing_in_R_v1 folder to run this code
-setwd(wd)
+setwd(paste(wd,"results\\",sep = "")) # DEM and iRIC calculation results must be in their own folder
 
 # read in elevation surface from the working directory
 SMR_elev <- raster("smrf_DEM_v241.tif")
 #plot(SMR_elev)
 
 # get names of iric output csv files in the working directory
-iric_results <- list.files(pattern = ".csv")
+iric_results <- list.files(pattern = ".csv") # working directory cannot contain any csv's besides results
 
 # create an empty raster with the extent, resolution, and projection of the DEM.
 e <- extent(SMR_elev)

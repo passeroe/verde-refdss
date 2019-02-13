@@ -1,2 +1,3 @@
-depthmin,depthmax,velmin,velmax
-0.5,1,0.1,0.4
+,depthmin,depthmax,velmin,velmax
+adult,0.5,1,0.1,0.4
+juvenile,0.3,0.7,0.1,0.3
