@@ -31,13 +31,13 @@ if (length(setdiff(packages, rownames(installed.packages()))) > 0) {
 lapply(packages,library,character.only=TRUE)
 
 ##### Begin Function #####
-iric.process.smr <- function(wd,inMet) {
+iric.process.smr <- function(wd,inMet,DEM,reachName) {
 
 # Set this to the IRIC_Processing_in_R_v1 folder to run this code
-setwd(paste(wd,"results\\",sep = "")) # DEM and iRIC calculation results must be in their own folder
+setwd(paste(wd,"results","\\",reachName,"\\",sep = "")) # DEM and iRIC calculation results must be in their own folder
 
 # read in elevation surface from the working directory
-SMR_elev <- raster("smrf_DEM_v241.tif")
+SMR_elev <- raster(DEM)
 #plot(SMR_elev)
 
 # get names of iric output csv files in the working directory
@@ -46,7 +46,8 @@ iric_results <- list.files(pattern = ".csv") # working directory cannot contain 
 # create an empty raster with the extent, resolution, and projection of the DEM.
 e <- extent(SMR_elev)
 res <- res(SMR_elev)
-r <- raster(x = e,resolution = res,crs = "+proj=utm +zone=10 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0")
+setCRS <- crs(SMR_elev)
+r <- raster(x = e,resolution = res,crs = setCRS)
 
 # read in one of the result files to view head and QAQC
 read.csv(iric_results[1],skip = 2,header = T) %>%
@@ -64,14 +65,14 @@ modeled_q <- c()
 for (i in iric_results) {
 # get iric output i
 df_i <-  read.csv(i,skip = 2,header = T)
-df_i <- setnames(df_i,c(15,21),c("VelocityMag","ShearSMag")) # remove spaces from habitat variable names
+df_i <- setnames(df_i,c(12,15),c("VelocityMag","ShearSMag")) # remove spaces from habitat variable names; need to work out kinks in results
 # set the discharge of iric output i as q_i [character]
 q_i <- sub("Result_","",sub(".csv","",i))
 # Transfer values from iric output i to the cells of raster r, but only when the cell is inundated (!= 0)
 # If multiple points from the iric output are within a cell of r, the mean points is used for the cell value.
 r_i <- rasterize(x = df_i[,c("X","Y")],y = r, field = ifelse(df_i[,"Depth"] == 0,NA,df_i[,val]),fun = mean)
 # set projection of raster i
-proj4string(r_i) <- CRS("+proj=utm +zone=10 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0")
+proj4string(r_i) <- setCRS
 # Resample raster i using bilinear interpolation to fill in those cells in r_i that did not have a cell value due to no point overlap
 r_rsmpl_i <- raster::projectRaster(from=r_i,to=SMR_elev,method = 'bilinear')
 # update the name of the resampled raster to include the units of the discharge measure
