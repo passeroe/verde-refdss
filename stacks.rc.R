@@ -1,6 +1,6 @@
 # Function: Reclassifies rasterStacks with habitat suitability criteria. 
 # Outputs RasterBrick with layers of suitable cells by discharge
-# Last edited by Elaina Passero on 02/13/19
+# Last edited by Elaina Passero on 02/19/19
 
 
 ### Begin function ###
@@ -28,5 +28,6 @@ stacks.rc <-function(iricValRast,hsc,habMets) {
     accept <- accept+1    
   }
   acceptRast[acceptRast < accept] <- NA # Sets any unsuitable cells to NA
+  acceptRast[acceptRast == accept] <- 1 # Sets unsuitable cells to 1
   return(acceptRast) # Returns Brick of suitable cells by discharge
 } # end function

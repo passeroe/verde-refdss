@@ -65,7 +65,8 @@ modeled_q <- c()
 for (i in iric_results) {
 # get iric output i
 df_i <-  read.csv(i,skip = 2,header = T)
-df_i <- setnames(df_i,c(12,15),c("VelocityMag","ShearSMag")) # remove spaces from habitat variable names; need to work out kinks in results
+# set names 15 & 21 for Sample and 12 & 15 for Chris's
+df_i <- setnames(df_i,c(15,21),c("VelocityMag","ShearSMag")) # remove spaces from habitat variable names; need to work out kinks in results
 # set the discharge of iric output i as q_i [character]
 q_i <- sub("Result_","",sub(".csv","",i))
 # Transfer values from iric output i to the cells of raster r, but only when the cell is inundated (!= 0)
