@@ -1,6 +1,6 @@
 # Function: Reclassifies rasterStacks with habitat suitability criteria. 
 # Outputs RasterBrick with layers of suitable cells by discharge
-# Last edited by Elaina Passero on 02/19/19
+# Last edited by Elaina Passero on 02/22/19
 
 
 ### Begin function ###
@@ -13,17 +13,17 @@ stacks.rc <-function(iricValRast,hsc,habMets) {
     acceptRast <- acceptRast + rcDrast
     accept <- 1
   }
-  if("VelocityMag" %in% names(iricValRast)) {
+  if("Velocity..magnitude" %in% names(iricValRast)) {
     sVel <- c(0,hsc$velmin,0, hsc$velmin,hsc$velmax,1, hsc$velmax,999,0)
     rcVMat <- matrix(sVel, ncol=3, byrow=TRUE)
-    rcVrast <- reclassify(iricValRast$VelocityMag, rcVMat)
+    rcVrast <- reclassify(iricValRast$Velocity..magnitude, rcVMat)
     acceptRast <- acceptRast + rcVrast
     accept <- accept+1
   }
-  if("ShearSMag" %in% names(iricValRast)){
+  if("ShearStress..magnitude" %in% names(iricValRast)){
     sShe <- c(0,hsc$shemin,0, hsc$shemin,hsc$shemax,1, hsc$shemax,999,0)
     rcSMat <- matrix(sShe, ncol=3, byrow=TRUE)
-    rcSrast <- reclassify(iricValRast$VelocityMag, rcVMat)
+    rcSrast <- reclassify(iricValRast$ShearStress..magnitude, rcSMat)
     acceptRast <- acceptRast + rcSrast
     accept <- accept+1    
   }
