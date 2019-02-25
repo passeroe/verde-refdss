@@ -1,6 +1,6 @@
 # Function: This script serves as the master script that controls which functions are run and what inputs are used for finding suitable fish habitat
 #         It will later be converted to the script that controls the Shiny App.
-# Last edited by Elaina Passero on 02/22/19
+# Last edited by Elaina Passero on 02/25/19
 
 # Load required packages
 packages <- c("SDMTools","sp","raster","rgeos","rgdal","sf","spatstat","spdep","tidyverse","rasterVis","ggplot2","data.table","dpylr")
@@ -14,7 +14,7 @@ lapply(packages,library,character.only=TRUE)
 
 # Set Inputs
 wd <- "C:\\Users\\epassero\\Desktop\\VRDSS\\verde-refdss\\" # Set path to local repository
-habMets <- list("Depth","Velocity..magnitude") #Variables from iRIC calculation result used for habitat analysis
+habMets <- list("Depth","Velocity..magnitude.") #Variables from iRIC calculation result used for habitat analysis
 species <- "fakefish"
 lifestages <- list("adult","juvenile") #lifestages from oldest to youngest; must match order in HSC table
 reachName <- "Sample" # 1Beasley or Sample
@@ -31,14 +31,16 @@ source(paste(wd, "by.substrate.R",sep="\\"))
 source(paste(wd, "brick.2.spdf.R",sep="\\"))
 
 # Run functions
-## Convert iRIC outputs to rasterStacks by variable
+## format result CSVs and get list of discharges
 holdList <- get.results(wd,reachName)
 csvList <- holdList$csvList
 modeled_q <- holdList$modeled_q
+rm(holdList)
 
+## Convert iRIC outputs to rasterStacks by variable
 iricValRast <- list()
-iricValRast <- mapply(iric.process.smr,habMets,csvList, MoreArgs = list(wd,DEM,reachName))
-names(iricValRast) <-habMets #name Stacks by their variable
+iricValRast <- lapply(habMets, function(a) iric.process.smr(a,csvList,wd,DEM,reachName))
+names(iricValRast) <-habMets
 
 ## Reclassify Stacks with hydraulic and substrate HSC by lifestage
 hsc_allages<-fread(paste(wd,species,"_hsc",".csv",sep = ""), header=TRUE, sep=",")

@@ -1,5 +1,5 @@
 # This function will pull in iRIC output results and format them to be rasterized
-# Last updated by Elaina Passero 2/22/19
+# Last updated by Elaina Passero 2/25/19
 
 # Requirements for running this code:
 # The sequential layers of inundating discharge surfaces has an order that is inherited when it is read in from the directory.
@@ -21,7 +21,8 @@ modeled_q <- c()
 q_i <- sub("Result_","",sub(".csv","",iric_results))
 modeled_q <- c(modeled_q,as.numeric(q_i))
 
-csvList <- lapply(iric_results, function(i) read.csv(i,skip = 2,header = TRUE, sep=",",check.names=TRUE))
+csvList <- lapply(iric_results, function(i) fread(file=i,skip = 2,header = TRUE, sep=",",check.names=TRUE))
+names(csvList) <- as.character(modeled_q)
 
 holdList$csvList <- csvList
 holdList$modeled_q <- modeled_q

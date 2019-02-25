@@ -1,12 +1,8 @@
 # Adapted from IRIC_processing_v1 by Julian Scott 01/30/19
 # Function: Processes iRIC output by discharge and variable. Returns list of rasters. 
-# Last edited by Elaina Passero on 02/21/19
+# Last edited by Elaina Passero on 02/25/19
 
-iric.process.smr <- function(habMets,csvList,wd,DEM,reachName) {
- # wd <- MoreArgs$wd
-# DEM <- MoreArgs$DEM
- #reachName <- MoreArgs$reachName
- # csvList <- MoreArgs$csvList
+iric.process.smr <- function(a,csvList,wd,DEM,reachName) {
   
   setwd(paste(wd,"results","\\",reachName,"\\",sep = "")) # DEM and iRIC calculation results must be in their own folder
   # read in elevation surface from the working directory
@@ -16,19 +12,13 @@ iric.process.smr <- function(habMets,csvList,wd,DEM,reachName) {
   res <- res(SMR_elev)
   setCRS <- crs(SMR_elev)
   r <- raster(x = e,resolution = res,crs = setCRS)
-  # Create empty stack to contain rasters
-  SMR_Q_S <- stack()
-  
-  # Variables that will define the values of the processed iric result grid
-  val = habMets
   
   # Transfer values from iric output i to the cells of raster r, but only when the cell is inundated (!= 0)
   # If multiple points from the iric output are within a cell of r, the mean points is used for the cell value.
-  SMR_Q_S <- lapply(csvList,function(i) rasterize(x = i[,c("X","Y")],y = r, field = ifelse(i[,"Depth"] == 0,NA,i[,val]),fun = mean))
+  SMR_Q_S <- stack(lapply(csvList,function(i) rasterize(x = i[,c("X","Y")],y = r, field = ifelse(i[,"Depth"] == 0,NA,i[,a]),fun = mean)))
   proj4string(SMR_Q_S) <- setCRS
   # Resample raster i using bilinear interpolation to fill in those cells in r_i that did not have a cell value due to no point overlap
   SMR_Q_S <- raster::projectRaster(from=SMR_Q_S,to=SMR_elev,method = 'bilinear')
- 
-   # Returns list of rasters
+   # Returns stack of rasters
   return(SMR_Q_S)
 } # end function
