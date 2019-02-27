@@ -5,7 +5,7 @@
 # The sequential layers of inundating discharge surfaces has an order that is inherited when it is read in from the directory.
 # Therefore, the naming convention of the IRIC output csv files must be such that they are ordered correctl
 
-get.results <- function(wd,reachName){
+get.results <- function(wd,reachName,disunit){
   
 # Set this to the IRIC_Processing_in_R_v1 folder to run this code
 setwd(paste(wd,"results","\\",reachName,"\\",sep = "")) # DEM and iRIC calculation results must be in their own folder
@@ -21,8 +21,8 @@ modeled_q <- c()
 q_i <- sub("Result_","",sub(".csv","",iric_results))
 modeled_q <- c(modeled_q,as.numeric(q_i))
 
-csvList <- lapply(iric_results, function(i) fread(file=i,skip = 2,header = TRUE, sep=",",check.names=TRUE))
-names(csvList) <- as.character(modeled_q)
+csvList <- lapply(iric_results, function(i) fread(file=i,skip = 2,header = TRUE, sep=",",check.names=TRUE,data.table = FALSE))
+names(csvList) <- paste(disunit,"_",modeled_q,sep="")
 
 holdList$csvList <- csvList
 holdList$modeled_q <- modeled_q

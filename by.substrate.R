@@ -5,7 +5,7 @@
 ### Begin Function ###
 by.substrate <- function(hhList,subTab){
   # create fake substrate layer; process is different depending on which dataset you are running
-  fakeSub <- iricValRast[[1]]$Result_0000.67.csv # looking at depth
+  fakeSub <- iricValRast[[1]]$cms_0.67# looking at depth
   fSub <- c(0,0.5,0, 0.5,0.6,1, 0.6,0.7,2, 0.7,0.8,3, 0.8,999,4) # arbitrarily creating reclassification criteria
   rcFSMat <- matrix(fSub,ncol=3,byrow=TRUE)
   fakeSub <- reclassify(fakeSub,rcFSMat)

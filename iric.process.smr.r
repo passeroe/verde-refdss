@@ -19,6 +19,6 @@ iric.process.smr <- function(a,csvList,wd,DEM,reachName) {
   proj4string(SMR_Q_S) <- setCRS
   # Resample raster i using bilinear interpolation to fill in those cells in r_i that did not have a cell value due to no point overlap
   SMR_Q_S <- raster::projectRaster(from=SMR_Q_S,to=SMR_elev,method = 'bilinear')
-   # Returns stack of rasters
+   # Returns Brick of rasters
   return(SMR_Q_S)
 } # end function

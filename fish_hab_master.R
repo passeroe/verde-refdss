@@ -19,6 +19,7 @@ species <- "fakefish"
 lifestages <- list("adult","juvenile") #lifestages from oldest to youngest; must match order in HSC table
 reachName <- "Sample" # 1Beasley or Sample
 DEM <- "smrf_DEM_v241.tif" # Name of DEM used in iRIC: VerdeBeasley1Elev.tif or smrf_DEM_v241.tif
+disunit <- "cms" #units of discharge
 
 # Options: Currently this is only set up to run with the Sample reach
 CheckSub <- 1 # 1 (Yes) or 0 (No). Choose whether or not to check substrate conditions as part of suitable habitat
@@ -32,17 +33,18 @@ source(paste(wd, "brick.2.spdf.R",sep="\\"))
 
 # Run functions
 ## format result CSVs and get list of discharges
-holdList <- get.results(wd,reachName)
+holdList <- get.results(wd,reachName,disunit)
 csvList <- holdList$csvList
 modeled_q <- holdList$modeled_q
 rm(holdList)
 
-## Convert iRIC outputs to rasterStacks by variable
+## Convert iRIC outputs to rasterBricks by variable
 iricValRast <- list()
 iricValRast <- lapply(habMets, function(a) iric.process.smr(a,csvList,wd,DEM,reachName))
 names(iricValRast) <-habMets
+rm(csvList)
 
-## Reclassify Stacks with hydraulic and substrate HSC by lifestage
+## Reclassify Bricks with hydraulic and substrate HSC by lifestage
 hsc_allages<-fread(paste(wd,species,"_hsc",".csv",sep = ""), header=TRUE, sep=",")
 if(CheckSub == "1"){sub_allages<-fread(paste(wd,species,"_substrate",".csv",sep=""),header=TRUE, sep = ",",data.table = FALSE)} # load substrate requirements
 goodHabList <- list() # list that will hold suitable hydraulic habitat by lifestage
@@ -58,7 +60,7 @@ for(b in 1:length(lifestages)){
 names(goodHabList) <- lifestages # list of Bricks by lifestage
 
 ## Total available habitat area by lifestage
-goodPolyList <- brick.2.spdf(goodHabList)
+#goodPolyList <- brick.2.spdf(goodHabList)
 
 
 
