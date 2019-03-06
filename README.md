@@ -16,10 +16,10 @@ The Verde River Wild and Scenic River Riverine Environmental Flow Decision Suppo
 Currently, the script rasterizes the FaSTMECH results based on the DEM using bilinear interpolation. The rasters are reclassified into suitable and unsuitable habitat using the provided habitat suitability criteria. A flowchart of the process is available in the main repository folder.
 
 ### Descriptions of Functions
-1. Fish_hab_master: Serves as the master script that handles user inputs and calls functions. 
+1. Fish_hab_master: Serves as the master script that handles user inputs and calls functions. Runs through functions using habitat metrics or lifestages. 
 2. get.results: Pulls in iRIC output results as CSVs and fixes headers containing special characters. Returns a list of CSVs and a list of the modeled discharges.
 3. iric.process.smr: Rasterizes the results in list of CSVs using attributes of user supplied DEM. Returns a rasterBrick of each habitat metric that contains the results for all modeled discharges.
-4. stacks.rc: Reclassifies rasterBricks (formerly Stacks will update name later) into suitable and unsuitable habitat based on habitat suitability criteria (HSC csv). Returns a Brick of suitable cells by discharge.
+4. bricks.rc: Reclassifies rasterBricks into suitable and unsuitable habitat based on habitat suitability criteria (HSC csv). Returns a Brick of suitable cells by discharge.
 5. by.substrate: *Optional*. Creates dummy substrate raster layer (this feature will be removed/replaced once substrate maps are available). Takes a rasterized substrate type map of the same extent, resolution, and projection of DEM and reclassifies it into suitable or unsuitable substrate based on user supplied substrate criteria table. Uses the reclassified substrate map as a mask over the Brick of hydraulically suitable cells to extract cells that have suitable habitat. Returns a rasterBrick of suitable habitat.
 6. brick.2.spdf: Converts rasterBricks to Spatial Polygon Data Frames (SPDFs). Calculates areas of each habitat polygon and removes polygons that are too small (<0.25 m2). Returns a list of SPDFs for each lifestage where each SPDF corresponds to a modeled discharge.
 7. effective.area: *Optional*. Uses effective area relationships table to calculate the effective area for each lifestage in the table. Returns a list of lifestages containing lists of SPDFs of effective area by discharge.
