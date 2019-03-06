@@ -1,6 +1,6 @@
 # Function: This script serves as the master script that controls which functions are run and what inputs are used for finding suitable fish habitat
 #         It will later be converted to the script that controls the Shiny App.
-# Last edited by Elaina Passero on 02/25/19
+# Last edited by Elaina Passero on 02/29/19
 
 # Load required packages
 packages <- c("SDMTools","sp","raster","rgeos","rgdal","sf","spatstat","spdep","tidyverse","rasterVis","ggplot2","data.table","dpylr")
@@ -23,16 +23,18 @@ disunit <- "cms" #units of discharge
 
 # Options: Currently this is only set up to run with the Sample reach
 CheckSub <- 1 # 1 (Yes) or 0 (No). Choose whether or not to check substrate conditions as part of suitable habitat
+CalcEffArea <- 0 # 1 (Yes) or 0 (No). Choose whether or not to calculate effective habitat area
 
 # Load functions
 source(paste(wd,"get.results.R",sep="\\"))
 source(paste(wd,"iric.process.smr.R",sep="\\"))
-source(paste(wd, "stacks.rc.R",sep="\\"))
-source(paste(wd, "by.substrate.R",sep="\\"))
-source(paste(wd, "brick.2.spdf.R",sep="\\"))
+source(paste(wd,"bricks.rc.R",sep="\\"))
+source(paste(wd,"by.substrate.R",sep="\\"))
+source(paste(wd,"brick.2.spdf.R",sep="\\"))
+source(paste(wd,"effective.area.R",sep="\\"))
 
 # Run functions
-## format result CSVs and get list of discharges
+## Format result CSVs and get list of discharges
 holdList <- get.results(wd,reachName,disunit)
 csvList <- holdList$csvList
 modeled_q <- holdList$modeled_q
@@ -50,7 +52,7 @@ if(CheckSub == "1"){sub_allages<-fread(paste(wd,species,"_substrate",".csv",sep=
 goodHabList <- list() # list that will hold suitable hydraulic habitat by lifestage
 for(b in 1:length(lifestages)){
   hsc <- hsc_allages[b] # creates HSC table for current lifestage
-  goodHabList[[b]] <- stacks.rc(iricValRast,hsc,habMets)
+  goodHabList[[b]] <- bricks.rc(iricValRast,hsc,habMets)
   if(CheckSub == "1"){
     subTab <- sub_allages[,b] # creates table of substrate for current lifestage
     hhList <- goodHabList[[b]] # holds rasters of area for current lifestage
@@ -60,7 +62,11 @@ for(b in 1:length(lifestages)){
 names(goodHabList) <- lifestages # list of Bricks by lifestage
 
 ## Total available habitat area by lifestage
-#goodPolyList <- brick.2.spdf(goodHabList)
+goodPolyList <- lapply(goodHabList, function(c) brick.2.spdf(c))
 
-
+## Effective habitat area
+### Not functional yet
+if (CalcEffArea == 1){
+  EffTab <- lapply(lifestages,function(e) effective.area(e,goodPolyList))
+}
 
