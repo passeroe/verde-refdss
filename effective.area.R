@@ -1,5 +1,5 @@
 # This function will calculate effective area
-# Last updated by Elaina Passero on 2/28/19
+# Last updated by Elaina Passero on 3/11/19
 
 effective.area <- function(e,goodPolyList){
 
@@ -10,26 +10,18 @@ if (e %in% effTab$primary) {
   pos <- as.numeric(which(effTab$primary==e,arr.ind = TRUE)) #gets position of relationship
   ageName <- as.character(effTab[pos,2]) # finds the connect-to lifestage name
   connTo <- goodPolyList[[ageName]]
+  
   ## check for intersection
-  checkInt <- mapply(function(i) gIntersects(prim[[i]],connTo[[i]],byid=TRUE,returnDense = FALSE))
-  
-  checkInt <- list()
   for(i in 1:length(prim)){
+    if(length(prim[[i]]) > 0 && length(connTo[[i]]) > 0){ # checks that there was suitable habitat found at discharge for each lifestage
     simCT <- gUnaryUnion(connTo[[i]]) # convert polygons into a single object (still has sub-polygons)
-    checkInt[[i]] <- gIntersects(prim[[i]],simCT,byid=TRUE,returnDense = TRUE)
-  }
+    checkInt <- as.vector(gIntersects(prim[[i]],simCT,byid=TRUE,returnDense = TRUE))
+    prim[[i]]$checkInt <- checkInt
+    prim[[i]] <- prim[[i]][prim[[i]]$checkInt == TRUE,] # remove polygons that do not intersect connTo
+    } # end of if statement
+  } # end of for loop
   
- simCT <- gUnaryUnion(connTo[[1]])
- checkInt <- gIntersects(prim[[1]],simCT,byid=TRUE,returnDense = FALSE)
-  
-  ## remove polygons that do not intersect
-  
-}
-  
-  
-  } # end of function
+} # end of first if statement
+return(prim)
+} # end of function
 
-
-#spplot(simCT)
-#spplot(prim[[4]])
-#spplot(connTo[[4]])

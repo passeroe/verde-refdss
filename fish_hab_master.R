@@ -1,6 +1,6 @@
 # Function: This script serves as the master script that controls which functions are run and what inputs are used for finding suitable fish habitat
 #         It will later be converted to the script that controls the Shiny App.
-# Last edited by Elaina Passero on 02/29/19
+# Last edited by Elaina Passero on 03/12/19
 
 # Load required packages
 packages <- c("SDMTools","sp","raster","rgeos","rgdal","sf","spatstat","spdep","tidyverse","rasterVis","ggplot2","data.table","dpylr")
@@ -23,7 +23,7 @@ disunit <- "cms" #units of discharge
 
 # Options: Currently this is only set up to run with the Sample reach
 CheckSub <- 1 # 1 (Yes) or 0 (No). Choose whether or not to check substrate conditions as part of suitable habitat
-CalcEffArea <- 0 # 1 (Yes) or 0 (No). Choose whether or not to calculate effective habitat area
+CalcEffArea <- 1 # 1 (Yes) or 0 (No). Choose whether or not to calculate effective habitat area
 
 # Load functions
 source(paste(wd,"get.results.R",sep="\\"))
@@ -32,6 +32,7 @@ source(paste(wd,"bricks.rc.R",sep="\\"))
 source(paste(wd,"by.substrate.R",sep="\\"))
 source(paste(wd,"brick.2.spdf.R",sep="\\"))
 source(paste(wd,"effective.area.R",sep="\\"))
+source(paste(wd,"build.tables.eff.R",sep="\\"))
 
 # Run functions
 ## Format result CSVs and get list of discharges
@@ -63,10 +64,19 @@ names(goodHabList) <- lifestages # list of Bricks by lifestage
 
 ## Total available habitat area by lifestage
 goodPolyList <- lapply(goodHabList, function(c) brick.2.spdf(c))
+rm(goodHabList)
 
 ## Effective habitat area
-### Not functional yet
 if (CalcEffArea == 1){
-  EffTab <- lapply(lifestages,function(e) effective.area(e,goodPolyList))
+  ### Calculate effective habitat area
+  effAreaList <- lapply(lifestages,function(e) effective.area(e,goodPolyList))
+  names(effAreaList) <- lifestages
+  ### Construct Area-Lookup Tables
+  areaTabsEff <- lapply(lifestages, function(j) build.tables.eff(j,goodPolyList,effAreaList,modeled_q))
+  polyTab <- areaTabsEff[[1]] # data frame of spatial polygons
+  areaLookTab <- areaTabsEff[[2]] # data frame of total available and effective area
+  rm(areaTabsEff)
 }
+
+
 

@@ -16,6 +16,6 @@ by.substrate <- function(hhList,subTab){
   fakeSub[fakeSub == subTab] <- 1
 
   # Mask
-  bySubBrick <- mask(hhList,fakeSub,maskvalue=NA,updatevalue=NA) 
+  bySubBrick <- mask(hhList,fakeSub,maskvalue=NA,updatevalue=NA) # if cells not covered by acceptable substrate or are NA, they are set to NA
   return(bySubBrick)
 }
