@@ -1,6 +1,6 @@
 # This script will construct suitable habitat area lookup tables when effective area has been calculated
 # It will also export a data frame containing the polygons of suitable habitat area by discharge for later use
-# Last edited by Elaina Passero on 3/12/19
+# Last edited by Elaina Passero on 3/14/19
 
 build.tables.eff <- function(j,goodPolyList,effAreaList,modeled_q){
   areaLookTab <- data.frame(row.names=modeled_q) # data table to hold total available and effective area
@@ -15,8 +15,8 @@ build.tables.eff <- function(j,goodPolyList,effAreaList,modeled_q){
     if(length(m)>0){gArea(m)} else{0}})
   polyTab$effArea <- lapply(totList, function(n) {
     if(length(n)>0){gUnaryUnion(n)} else{NULL}})
-  areaTabsEff <- list(polyTab,areaLookTab)
-  return(areaTabsEff)
+  areaTabs <- list(polyTab,areaLookTab)
+  return(areaTabs)
 }
 
 

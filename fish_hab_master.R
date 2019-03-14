@@ -1,6 +1,6 @@
 # Function: This script serves as the master script that controls which functions are run and what inputs are used for finding suitable fish habitat
 #         It will later be converted to the script that controls the Shiny App.
-# Last edited by Elaina Passero on 03/12/19
+# Last edited by Elaina Passero on 03/14/19
 
 # Load required packages
 packages <- c("SDMTools","sp","raster","rgeos","rgdal","sf","spatstat","spdep","tidyverse","rasterVis","ggplot2","data.table","dpylr")
@@ -72,10 +72,16 @@ if (CalcEffArea == 1){
   effAreaList <- lapply(lifestages,function(e) effective.area(e,goodPolyList))
   names(effAreaList) <- lifestages
   ### Construct Area-Lookup Tables
-  areaTabsEff <- lapply(lifestages, function(j) build.tables.eff(j,goodPolyList,effAreaList,modeled_q))
-  polyTab <- areaTabsEff[[1]] # data frame of spatial polygons
-  areaLookTab <- areaTabsEff[[2]] # data frame of total available and effective area
-  rm(areaTabsEff)
+  areaTabs <- lapply(lifestages, function(j) build.tables.eff(j,goodPolyList,effAreaList,modeled_q))
+  polyTab <- areaTabs[[1]] # data frame of spatial polygons
+  areaLookTab <- areaTabs[[2]] # data frame of total available and effective area
+  rm(areaTabs)
+} else{ ## Total available habitat area
+  ### Construct Area-Lookup Tables
+  areaTabs <- lapply(lifestages, function(n) build.tables.tot(n,goodPolyList,totAreaList,modeled_q))
+  polyTab <- areaTabs[[1]] # data frame of spatial polygons
+  areaLookTab <- areaTabs[[2]] # data frame of total available and effective area
+  rm(areaTabs)
 }
 
 
