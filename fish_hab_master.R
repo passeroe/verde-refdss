@@ -1,6 +1,6 @@
 # Function: This script serves as the master script that controls which functions are run and what inputs are used for finding suitable fish habitat
 #         It will later be converted to the script that controls the Shiny App.
-# Last edited by Elaina Passero on 03/14/19
+# Last edited by Elaina Passero on 03/15/19
 
 # Load required packages
 packages <- c("SDMTools","sp","raster","rgeos","rgdal","sf","spatstat","spdep","tidyverse","rasterVis","ggplot2","data.table","dpylr")
@@ -33,6 +33,9 @@ source(paste(wd,"by.substrate.R",sep="\\"))
 source(paste(wd,"brick.2.spdf.R",sep="\\"))
 source(paste(wd,"effective.area.R",sep="\\"))
 source(paste(wd,"build.tables.eff.R",sep="\\"))
+source(paste(wd,"save.polys.eff.R",sep="\\"))
+source(paste(wd,"build.tables.tot.R",sep="\\"))
+source(paste(wd,"save.polys.tot.R",sep="\\"))
 
 # Run functions
 ## Format result CSVs and get list of discharges
@@ -72,17 +75,24 @@ if (CalcEffArea == 1){
   effAreaList <- lapply(lifestages,function(e) effective.area(e,goodPolyList))
   names(effAreaList) <- lifestages
   ### Construct Area-Lookup Tables
-  areaTabs <- lapply(lifestages, function(j) build.tables.eff(j,goodPolyList,effAreaList,modeled_q))
-  polyTab <- areaTabs[[1]] # data frame of spatial polygons
-  areaLookTab <- areaTabs[[2]] # data frame of total available and effective area
-  rm(areaTabs)
+  areaLookTab <- lapply(lifestages, function(j) build.tables.eff(j,goodPolyList,effAreaList,modeled_q)) # data frame of total available and effective area
+  names(areaLookTab) <- lifestages
+  polyTab <- lapply(lifestages, function(m) save.polys.eff(m, goodPolyList, effAreaList, modeled_q))# data frame of spatial polygons
+  names(polyTab) <- lifestages
 } else{ ## Total available habitat area
   ### Construct Area-Lookup Tables
-  areaTabs <- lapply(lifestages, function(n) build.tables.tot(n,goodPolyList,totAreaList,modeled_q))
-  polyTab <- areaTabs[[1]] # data frame of spatial polygons
-  areaLookTab <- areaTabs[[2]] # data frame of total available and effective area
-  rm(areaTabs)
+  areaLookTab <- lapply(lifestages, function(p) build.tables.tot(p,goodPolyList,totAreaList,modeled_q)) # data frame of total available area
+  names(areaLookTab) <- lifestages
+  polyTab <- lapply(lifestages, function(r) save.polys.tot(r, goodPolyList, effAreaList, modeled_q)) # data frame of spatial polygons
+  names(polyTab) <- lifestages
 }
 
+## Read in hydrograph
+hydrograph <- fread(paste(wd,reachName,"_hydrograph",".csv",sep=""),header=TRUE, sep = ",",data.table=FALSE)
+#plot(modeled_q,areaLookTab[["juvenile"]]$totalArea)
+#plot(modeled_q,areaLookTab[["adult"]]$totalArea)
+#plot(modeled_q,areaLookTab[["juvenile"]]$effArea)
+#plot(modeled_q,areaLookTab[["adult"]]$effArea)
+#interTable <- lapply(lifestages, function(p) interp.table(hydrograph,areaLookTab,modeled_q))
 
 
