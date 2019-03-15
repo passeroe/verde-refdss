@@ -48,7 +48,7 @@ CalcEffArea <- 1 # 1 (Yes) or 0 (No). Choose whether or not to calculate effecti
 The names of habMets can be found in csvList. These names are reformatted in get.results.R to remove spaces and special characters.
 
 ### Outputs
-areaLookTab should contain two items (one for each lifestage) with a data frame of total available and effective area by discharge. Results can be plotted by lifestage and discharge using ```lapply(polyTab$adults[[2]], spplot)``` for adults effective area (or use [[1]] for total available and ```lapply(polyTab$juvenile[[2]], spplot)``` for juveniles effective area.
+areaLookTab should contain two items (one for each lifestage) with a data frame of total available and effective area by discharge. Results can be plotted by lifestage and discharge using ```lapply(polyTab$adults[[2]], spplot)``` for adults effective area (or use ```[[1]]``` for total available area) and ```lapply(polyTab$juvenile[[2]], spplot)``` for juveniles effective area.
 
 ## Future Developments
 1. Visualize habitat area through a hydrograph.
