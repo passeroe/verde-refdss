@@ -13,7 +13,7 @@ if (length(setdiff(packages, rownames(installed.packages()))) > 0) {
 lapply(packages,library,character.only=TRUE)
 
 # Set Inputs
-wd <- ""
+wd <- "C:/Users/epassero/Desktop/VRDSS/verde-refdss/"
 #wd <- "/Users/Morrison/Documents/Active Research Projects/Verde REFDSS/verde-refdss/" # Set path to local repository
 habMets <- list("Depth","Velocity..magnitude.") #Variables from iRIC calculation result used for habitat analysis
 species <- "fakefish"
@@ -37,17 +37,6 @@ source("build.tables.eff.R")
 source("save.polys.eff.R")
 source("build.tables.tot.R")
 source("save.polys.tot.R")
-
-source(paste(wd,"get.results.R",sep="\\"))
-source(paste(wd,"iric.process.smr.R",sep="\\"))
-source(paste(wd,"bricks.rc.R",sep="\\"))
-source(paste(wd,"by.substrate.R",sep="\\"))
-source(paste(wd,"brick.2.spdf.R",sep="\\"))
-source(paste(wd,"effective.area.R",sep="\\"))
-source(paste(wd,"build.tables.eff.R",sep="\\"))
-source(paste(wd,"save.polys.eff.R",sep="\\"))
-source(paste(wd,"build.tables.tot.R",sep="\\"))
-source(paste(wd,"save.polys.tot.R",sep="\\"))
 
 # Run functions
 ## Format result CSVs and get list of discharges
@@ -100,7 +89,7 @@ if (CalcEffArea == 1){
 }
 
 ## Read in hydrograph
-hydrograph <- fread(paste(wd,reachName,"_hydrograph",".csv",sep=""),header=TRUE, sep = ",",data.table=FALSE)
+#hydrograph <- fread(paste(wd,reachName,"_hydrograph",".csv",sep=""),header=TRUE, sep = ",",data.table=FALSE)
 #plot(modeled_q,areaLookTab[["juvenile"]]$totalArea)
 #plot(modeled_q,areaLookTab[["adult"]]$totalArea)
 #plot(modeled_q,areaLookTab[["juvenile"]]$effArea)

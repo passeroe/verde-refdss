@@ -4,7 +4,7 @@
 
 iric.process.smr <- function(a,csvList,wd,DEM,reachName) {
   
-  setwd(paste(wd,"results","\\",reachName,"\\",sep = "")) # DEM and iRIC calculation results must be in their own folder
+  setwd(paste(wd,"results","/",reachName,"/",sep = "")) # DEM and iRIC calculation results must be in their own folder
   # read in elevation surface from the working directory
   SMR_elev <- raster(DEM)
   # create an empty raster with the extent, resolution, and projection of the DEM.
