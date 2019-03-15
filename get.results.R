@@ -8,7 +8,7 @@
 get.results <- function(wd,reachName,disunit){
   
 # Set this to the IRIC_Processing_in_R_v1 folder to run this code
-setwd(paste(wd,"results","\\",reachName,"\\",sep = "")) # DEM and iRIC calculation results must be in their own folder
+setwd(paste(wd,"results","/",reachName,"/",sep = "")) # DEM and iRIC calculation results must be in their own folder
 # get names of iric output csv files in the working directory
 iric_results <- list.files(pattern = ".csv") # working directory cannot contain any csv's besides results
 

@@ -13,7 +13,8 @@ if (length(setdiff(packages, rownames(installed.packages()))) > 0) {
 lapply(packages,library,character.only=TRUE)
 
 # Set Inputs
-wd <- "C:\\Users\\epassero\\Desktop\\VRDSS\\verde-refdss\\" # Set path to local repository
+wd <- ""
+#wd <- "/Users/Morrison/Documents/Active Research Projects/Verde REFDSS/verde-refdss/" # Set path to local repository
 habMets <- list("Depth","Velocity..magnitude.") #Variables from iRIC calculation result used for habitat analysis
 species <- "fakefish"
 lifestages <- list("adult","juvenile") #lifestages from oldest to youngest; must match order in HSC table
@@ -26,6 +27,17 @@ CheckSub <- 1 # 1 (Yes) or 0 (No). Choose whether or not to check substrate cond
 CalcEffArea <- 1 # 1 (Yes) or 0 (No). Choose whether or not to calculate effective habitat area
 
 # Load functions
+source("get.results.R")
+source("iric.process.smr.R")
+source("bricks.rc.R")
+source("by.substrate.R")
+source("brick.2.spdf.R")
+source("effective.area.R")
+source("build.tables.eff.R")
+source("save.polys.eff.R")
+source("build.tables.tot.R")
+source("save.polys.tot.R")
+
 source(paste(wd,"get.results.R",sep="\\"))
 source(paste(wd,"iric.process.smr.R",sep="\\"))
 source(paste(wd,"bricks.rc.R",sep="\\"))
