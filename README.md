@@ -23,6 +23,8 @@ Currently, the script rasterizes the FaSTMECH results based on the DEM using bil
 5. by.substrate: *Optional*. Creates dummy substrate raster layer (this feature will be removed/replaced once substrate maps are available). Takes a rasterized substrate type map of the same extent, resolution, and projection of DEM and reclassifies it into suitable or unsuitable substrate based on user supplied substrate criteria table. Uses the reclassified substrate map as a mask over the Brick of hydraulically suitable cells to extract cells that have suitable habitat. Returns a rasterBrick of suitable habitat.
 6. brick.2.spdf: Converts rasterBricks to Spatial Polygon Data Frames (SPDFs). Calculates areas of each habitat polygon and removes polygons that are too small (<0.25 m2). Returns a list of SPDFs for each lifestage where each SPDF corresponds to a modeled discharge.
 7. effective.area: *Optional*. Uses effective area relationships table to calculate the effective area for each lifestage in the table. Returns a list of lifestages containing lists of SPDFs of effective area by discharge.
+8. build.tables.eff: *Optional*. Constructs habitat area lookup tables for total available and effective areas. Returns a data frame of habitat area lookup table and data frame of polygons of suitable areas.
+9. build.tables.tot: *If not calculating effective area.* Constructs habitat area lookup tables for total available area only. Returns a data frame of habitat area lookup table and data frame of polygons of suitable areas.
 
 
 ## Example
