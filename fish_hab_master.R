@@ -1,9 +1,9 @@
 # Function: This script serves as the master script that controls which functions are run and what inputs are used for finding suitable fish habitat
 #         It will later be converted to the script that controls the Shiny App.
-# Last edited by Elaina Passero on 03/15/19
+# Last edited by Elaina Passero on 03/25/19
 
 # Load required packages
-packages <- c("SDMTools","sp","raster","rgeos","rgdal","sf","spatstat","spdep","tidyverse","rasterVis","ggplot2","data.table","dpylr")
+packages <- c("SDMTools","sp","raster","rgeos","rgdal","sf","spatstat","spdep","tidyverse","rasterVis","ggplot2","data.table","dpylr","plotly")
 #  Check to see if each is installed, and install if not.
 if (length(setdiff(packages, rownames(installed.packages()))) > 0) {    
   install.packages(setdiff(packages, rownames(installed.packages())))  
@@ -15,6 +15,7 @@ lapply(packages,library,character.only=TRUE)
 # Set Inputs
 wd <- "C:/Users/epassero/Desktop/VRDSS/verde-refdss/"
 #wd <- "/Users/Morrison/Documents/Active Research Projects/Verde REFDSS/verde-refdss/" # Set path to local repository
+setwd(wd)
 habMets <- list("Depth","Velocity..magnitude.") #Variables from iRIC calculation result used for habitat analysis
 species <- "fakefish"
 lifestages <- list("adult","juvenile") #lifestages from oldest to youngest; must match order in HSC table
@@ -37,6 +38,9 @@ source("build.tables.eff.R")
 source("save.polys.eff.R")
 source("build.tables.tot.R")
 source("save.polys.tot.R")
+source("inspect.hydro.R")
+source("interp.table.R")
+source("interp.plot.R")
 
 # Run functions
 ## Format result CSVs and get list of discharges
@@ -89,11 +93,13 @@ if (CalcEffArea == 1){
 }
 
 ## Read in hydrograph
-#hydrograph <- fread(paste(wd,reachName,"_hydrograph",".csv",sep=""),header=TRUE, sep = ",",data.table=FALSE)
-#plot(modeled_q,areaLookTab[["juvenile"]]$totalArea)
-#plot(modeled_q,areaLookTab[["adult"]]$totalArea)
-#plot(modeled_q,areaLookTab[["juvenile"]]$effArea)
-#plot(modeled_q,areaLookTab[["adult"]]$effArea)
-#interTable <- lapply(lifestages, function(p) interp.table(hydrograph,areaLookTab,modeled_q))
+hydrograph <- fread(paste(wd,reachName,"_hydrograph",".csv",sep=""),header=TRUE, sep = ",",data.table=FALSE)
+hydrograph$date <- as.Date(hydrograph$date, format="%m/%d/%Y")
 
+## Inspect Area-discharge relationships before interpolating
+#inspect.plot <- lapply(lifestages, function(s) inspect.hydro(s,hydrograph,areaLookTab))
 
+## Generate Interpolated Discharge-Area Lookup Tables from Hydrograph and Regression
+### Currently, this table does not contain interpolated values
+inter.Tab <- lapply(lifestages, function(t) interp.table(t,hydrograph,areaLookTab))
+inter.plots <- lapply(lifestages, function(t) interp.plot(t,inter.Tab))
