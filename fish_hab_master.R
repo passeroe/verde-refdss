@@ -1,6 +1,6 @@
 # Function: This script serves as the master script that controls which functions are run and what inputs are used for finding suitable fish habitat
 #         It will later be converted to the script that controls the Shiny App.
-# Last edited by Elaina Passero on 03/25/19
+# Last edited by Elaina Passero on 04/4/19
 
 # Load required packages
 packages <- c("SDMTools","sp","raster","rgeos","rgdal","sf","spatstat","spdep","tidyverse","rasterVis","ggplot2","data.table","dpylr","plotly")
@@ -93,13 +93,13 @@ if (CalcEffArea == 1){
 }
 
 ## Read in hydrograph
-hydrograph <- fread(paste(wd,reachName,"_hydrograph",".csv",sep=""),header=TRUE, sep = ",",data.table=FALSE)
+hydrograph <- na.omit(fread(paste(wd,reachName,"_hydrograph",".csv",sep=""),header=TRUE, sep = ",",data.table=FALSE))
 hydrograph$date <- as.Date(hydrograph$date, format="%m/%d/%Y")
 
-## Inspect Area-discharge relationships before interpolating
-#inspect.plot <- lapply(lifestages, function(s) inspect.hydro(s,hydrograph,areaLookTab))
-
 ## Generate Interpolated Discharge-Area Lookup Tables from Hydrograph and Regression
-### Currently, this table does not contain interpolated values
-inter.Tab <- lapply(lifestages, function(t) interp.table(t,hydrograph,areaLookTab))
-inter.plots <- lapply(lifestages, function(t) interp.plot(t,inter.Tab))
+interTab <- lapply(lifestages, function(t) interp.table(t,hydrograph,areaLookTab))
+names(interTab) <- lifestages
+
+## Generate and view plots of total area through the hydrograph
+inter.plots <- lapply(lifestages, function(t) interp.plot(t,interTab))
+head(inter.plots)
