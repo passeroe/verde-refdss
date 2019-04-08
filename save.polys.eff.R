@@ -2,7 +2,8 @@
 # Last edited by Elaina Passero on 3/15/19
 
 save.polys.eff <- function(m, goodPolyList, effAreaList, modeled_q){
-  polyTab <- data.frame(row.names=modeled_q) # data frame to hold the Spatial Polygons
+  polyTab <- data.frame(modeled_q) # data frame to hold the Spatial Polygons
+  colnames(polyTab) <- "discharge"
   totList <- goodPolyList[[m]]
   effList <- effAreaList[[m]]
   polyTab$totalArea <- lapply(totList, function(n) {
