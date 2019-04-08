@@ -1,5 +1,5 @@
-# The function generates plots of total available habitat area and discharge through the hydrograph
-# Last updated by Elaina Passero on 4/4/19
+# The function generates plots of total available and effective habitat area and discharge through the hydrograph
+# Last updated by Elaina Passero on 4/8/19
 
 interp.plot <- function(t,interTab){
   iT <- interTab[[t]]
