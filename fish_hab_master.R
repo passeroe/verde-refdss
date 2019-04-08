@@ -101,5 +101,5 @@ interTab <- lapply(lifestages, function(t) interp.table(t,hydrograph,areaLookTab
 names(interTab) <- lifestages
 
 ## Generate and view plots of total area through the hydrograph
-inter.plots <- lapply(lifestages, function(t) interp.plot(t,interTab))
+inter.plots <- unlist(lapply(lifestages, function(t) interp.plot(t,interTab)))
 head(inter.plots)
