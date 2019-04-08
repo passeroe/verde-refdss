@@ -1,9 +1,9 @@
 # Function: This script serves as the master script that controls which functions are run and what inputs are used for finding suitable fish habitat
 #         It will later be converted to the script that controls the Shiny App.
-# Last edited by Elaina Passero on 04/4/19
+# Last edited by Elaina Passero on 04/08/19
 
 # Load required packages
-packages <- c("SDMTools","sp","raster","rgeos","rgdal","sf","spatstat","spdep","tidyverse","rasterVis","ggplot2","data.table","dpylr","plotly")
+packages <- c("SDMTools","sp","raster","rgeos","rgdal","sf","spatstat","spdep","tidyverse","rasterVis","ggplot2","data.table","dplyr","plotly")
 #  Check to see if each is installed, and install if not.
 if (length(setdiff(packages, rownames(installed.packages()))) > 0) {    
   install.packages(setdiff(packages, rownames(installed.packages())))  
@@ -101,5 +101,5 @@ interTab <- lapply(lifestages, function(t) interp.table(t,hydrograph,areaLookTab
 names(interTab) <- lifestages
 
 ## Generate and view plots of total area through the hydrograph
-inter.plots <- unlist(lapply(lifestages, function(t) interp.plot(t,interTab)))
-head(inter.plots)
+interPlots <- lapply(lifestages, function(t) interp.plot(t,interTab))
+head(interPlots)
