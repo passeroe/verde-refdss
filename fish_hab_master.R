@@ -17,17 +17,17 @@ lapply(packages,library,character.only=TRUE)
 wd <- "C:/Users/epassero/Desktop/VRDSS/verde-refdss/"
 #wd <- "/Users/Morrison/Documents/Active Research Projects/Verde REFDSS/verde-refdss/" # Set path to local repository
 setwd(wd)
-habMets <- list("Depth","Velocity..magnitude.") #Variables from iRIC calculation result used for habitat analysis
-species <- "browntrout"
+habMets <- list("depth","velocity") #Variables from iRIC calculation result used for habitat analysis ex: Velocity..magnitude.
+species <- "longfindace"
 lifestages <- list("adult") #lifestages from oldest to youngest; must match order in HSC table
-reachName <- "Cherry_Gage" # 1Beasley or Sample or Delaware_1
-DEM <- "smrf_DEM_v241.tif" # Name of DEM used in iRIC: VerdeBeasley1Elev.tif or smrf_DEM_v241.tif. If loading externally put NA
-disunit <- "cms" #units of discharge
+reachName <- "Cherry_Braid" # Should match name of folder with results
+DEM <- "braidallpts_DEM.tif" # Name of DEM used in iRIC: VerdeBeasley1Elev.tif or smrf_DEM_v241.tif or braidallpts_DEM.tif. If loading externally put NA
+disunit <- "cfs" #units of discharge
 
 # Options: Currently this is only set up to run with the Sample reach
 CheckSub <- 0 # 1 (Yes) or 0 (No). Choose whether or not to check substrate conditions as part of suitable habitat
 CalcEffArea <- 0 # 1 (Yes) or 0 (No). Choose whether or not to calculate effective habitat area
-LoadExternal <- 1 # 1 (Yes; external rasters) or 0 (No; iRIC results). Choose whether to process externally produced raster files
+LoadExternal <- 0 # 1 (Yes; external rasters) or 0 (No; iRIC results). Choose whether to process externally produced raster files
 # or to rasterize iRIC results.
 RemoveIslands <- 0 # 1 (Yes) or 0 (No). Choose whether or not to remove isolated (single cell) habitat patches
 
@@ -74,11 +74,13 @@ names(goodHabList) <- lifestages # list of Bricks by lifestage
 
 ## Total available habitat area by lifestage
 source("total.area.R")
-areaLookTab <- lapply(lifestages, function(c) total.area(c,goodHabList,modeled_q))
+areaLookTab <- lapply(lifestages, function(c) total.area(c,goodHabList,modeled_q,RemoveIslands))
+names(areaLookTab) <- lifestages
 
 ## Order rasters of total available habitat by modeled discharge
 source("rast.by.q.R")
 rastByQ <- lapply(lifestages, function(c) rast.by.q(c,goodHabList,modeled_q))
+names(rastByQ) <- lifestages
 
 ## Read in hydrograph
 hydrograph <- na.omit(fread(paste(wd,reachName,"_hydrograph",".csv",sep=""),header=TRUE, sep = ",",data.table=FALSE))

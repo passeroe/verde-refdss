@@ -1,22 +1,22 @@
 # Function: Reclassifies rasterStacks with habitat suitability criteria. 
 # Outputs RasterBrick with layers of suitable cells by discharge
-# Last edited by Elaina Passero on 04/15/19
+# Last edited by Elaina Passero on 04/22/19 <- changed names of habitat metrics to match River2D output
 
 
 ### Begin function ###
 bricks.rc <-function(outValRast,hsc,habMets) {
     acceptRast <- outValRast[[1]]*0 # creates rasterBrick of all 0's where acceptable cells will be added to by discharge
-  if("Depth" %in% names(outValRast)) {
+  if("depth" %in% names(outValRast)) {
     sDepth <- c(0,hsc$depthmin,0, hsc$depthmin,hsc$depthmax,1, hsc$depthmax,999,0)
     rcDMat <- matrix(sDepth, ncol=3, byrow=TRUE)
-    rcDrast <- reclassify(outValRast$Depth, rcDMat)
+    rcDrast <- reclassify(outValRast$depth, rcDMat)
     acceptRast <- acceptRast + rcDrast
     accept <- 1
   }
-  if("Velocity..magnitude" %in% names(outValRast)) {
+  if("velocity" %in% names(outValRast)) {
     sVel <- c(0,hsc$velmin,0, hsc$velmin,hsc$velmax,1, hsc$velmax,999,0)
     rcVMat <- matrix(sVel, ncol=3, byrow=TRUE)
-    rcVrast <- reclassify(outValRast$Velocity..magnitude, rcVMat)
+    rcVrast <- reclassify(outValRast$velocity, rcVMat)
     acceptRast <- acceptRast + rcVrast
     accept <- accept+1
   }
