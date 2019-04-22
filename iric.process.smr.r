@@ -1,12 +1,10 @@
 # Adapted from IRIC_processing_v1 by Julian Scott 01/30/19
 # Function: Processes iRIC output by discharge and variable. Returns list of rasters. 
-# Last edited by Elaina Passero on 02/25/19
+# Last edited by Elaina Passero on 04/12/19
 
 iric.process.smr <- function(a,csvList,wd,DEM,reachName) {
-  
-  setwd(paste(wd,"results","/",reachName,"/",sep = "")) # DEM and iRIC calculation results must be in their own folder
   # read in elevation surface from the working directory
-  SMR_elev <- raster(DEM)
+  SMR_elev <- raster(paste(wd,"results","/",reachName,"/",DEM,sep = ""))
   # create an empty raster with the extent, resolution, and projection of the DEM.
   e <- extent(SMR_elev)
   res <- res(SMR_elev)
@@ -19,6 +17,6 @@ iric.process.smr <- function(a,csvList,wd,DEM,reachName) {
   proj4string(SMR_Q_S) <- setCRS
   # Resample raster i using bilinear interpolation to fill in those cells in r_i that did not have a cell value due to no point overlap
   SMR_Q_S <- raster::projectRaster(from=SMR_Q_S,to=SMR_elev,method = 'bilinear')
-   # Returns Brick of rasters
+  # Returns Brick of rasters
   return(SMR_Q_S)
 } # end function
