@@ -27,6 +27,8 @@ Currently, the script rasterizes the FaSTMECH results based on the DEM using bil
 9. save.polys.eff: *Optional* Returns a data frame of habitat area lookup table and data frame of polygons of suitable areas.
 10. build.tables.tot: *If not calculating effective area.* Constructs habitat area lookup tables for total available area only. 
 11. save.polys.tot: *If not calculating effective area.* Returns a data frame of habitat area lookup table and data frame of polygons of suitable areas.
+12. interp.table: Adds total available and effective area (if applicable) to the hydrograph table. Will linearly interpolate between discharges to fill in areas for any discharges not run in iRIC. 
+13. interp.plot: Generates plots of total available and effective area (if applicable) with the user supplied hydrograph.
 
 ## Example
 The following example finds effective and total available suitable habitat area using multiple lifestages, habitat metrics, and calculation discharges.
@@ -48,10 +50,12 @@ CalcEffArea <- 1 # 1 (Yes) or 0 (No). Choose whether or not to calculate effecti
 The names of habMets can be found in csvList. These names are reformatted in get.results.R to remove spaces and special characters.
 
 ### Outputs
-areaLookTab should contain two items (one for each lifestage) with a data frame of total available and effective area by discharge. Results can be plotted by lifestage and discharge using ```lapply(polyTab$adults[[2]], spplot)``` for adults effective area (or use ```[[1]]``` for total available area) and ```lapply(polyTab$juvenile[[2]], spplot)``` for juveniles effective area.
+Four plots should be automatically generated showing total available and effective habitat area for adult and juvenile fish with the user supplied hydrograph and interpolated values.
 
 ## Future Developments
-1. Visualize habitat area through a hydrograph.
-2. Calculate area for discharges that were not run in FaSTMECH via interpolation.
+1. Convert to Shiny App.
+2. Improve visualization of habitat areas.
+3. Update by.substrate to handle real substrate maps.
+4. Process more complex habitat suitability requirements.
 
 
