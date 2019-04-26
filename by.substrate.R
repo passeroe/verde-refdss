@@ -1,9 +1,9 @@
 # This script is used to get suitable habitat that meets substrate type requirements.
 # Currently I am creating fake substrate type files until I have more information.
-# Last edited by Elaina Passero on 3/4/19
+# Last edited by Elaina Passero on 4/26/19
 
 ### Begin Function ###
-by.substrate <- function(hhList,subTab){
+by.substrate <- function(b, goodHabList, sub_allages){
   # create fake substrate layer; process is different depending on which dataset you are running
   fakeSub <- iricValRast[[1]]$cms_0.67# looking at depth
   fSub <- c(0,0.5,0, 0.5,0.6,1, 0.6,0.7,2, 0.7,0.8,3, 0.8,999,4) # arbitrarily creating reclassification criteria

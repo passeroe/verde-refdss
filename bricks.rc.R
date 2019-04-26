@@ -1,33 +1,28 @@
 # Function: Reclassifies rasterStacks with habitat suitability criteria. 
 # Outputs RasterBrick with layers of suitable cells by discharge
-# Last edited by Elaina Passero on 04/22/19 <- changed names of habitat metrics to match River2D output
+# Last edited by Elaina Passero on 04/26/19
 
 
 ### Begin function ###
-bricks.rc <-function(outValRast,hsc,habMets) {
-    acceptRast <- outValRast[[1]]*0 # creates rasterBrick of all 0's where acceptable cells will be added to by discharge
-  if("depth" %in% names(outValRast)) {
-    sDepth <- c(0,hsc$depthmin,0, hsc$depthmin,hsc$depthmax,1, hsc$depthmax,999,0)
-    rcDMat <- matrix(sDepth, ncol=3, byrow=TRUE)
-    rcDrast <- reclassify(outValRast$depth, rcDMat)
-    acceptRast <- acceptRast + rcDrast
-    accept <- 1
-  }
-  if("velocity" %in% names(outValRast)) {
-    sVel <- c(0,hsc$velmin,0, hsc$velmin,hsc$velmax,1, hsc$velmax,999,0)
-    rcVMat <- matrix(sVel, ncol=3, byrow=TRUE)
-    rcVrast <- reclassify(outValRast$velocity, rcVMat)
-    acceptRast <- acceptRast + rcVrast
-    accept <- accept+1
-  }
-  if("ShearStress..magnitude" %in% names(outValRast)){
-    sShe <- c(0,hsc$shemin,0, hsc$shemin,hsc$shemax,1, hsc$shemax,999,0)
-    rcSMat <- matrix(sShe, ncol=3, byrow=TRUE)
-    rcSrast <- reclassify(outValRast$ShearStress..magnitude, rcSMat)
-    acceptRast <- acceptRast + rcSrast
-    accept <- accept+1    
-  }
+bricks.rc <- function(b,outValRast,hsc_allages,habMets){
+  pos <- grep(b,hsc_allages,ignore.case = TRUE)
+  hsc <- hsc_allages[pos,] # HSC for current lifestage
+  
+  acceptRast <- outValRast[[1]]*0 # creates rasterBrick of all 0's where acceptable cells will be added to by discharge
+  accept <- 0
+  
+  for(i in 1:length(habMets)){
+      hm <- grep(habMets[i],names(hsc),ignore.case = TRUE) # position of habitat metric in HSC table
+      pMin <- min(hm) 
+      pMax <- max(hm) # set positions of min and max values for habitat metric
+      sDepth <- c(0,hsc[,pMin],0, hsc[,pMin],hsc[,pMax],1, hsc[,pMax],999,0)
+      rcDMat <- matrix(sDepth, ncol=3, byrow=TRUE)
+      rcDrast <- reclassify(outValRast[[i]], rcDMat)
+      acceptRast <- acceptRast + rcDrast
+      accept <- accept + 1
+  } # end of for loop
   acceptRast[acceptRast < accept] <- NA # Sets any unsuitable cells to NA
   acceptRast[acceptRast == accept] <- 1 # Sets unsuitable cells to 1
   return(acceptRast) # Returns Brick of suitable cells by discharge
-} # end function
+} # end of function 
+  
