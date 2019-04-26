@@ -1,11 +1,11 @@
 # This function will pull in iRIC output results and format them to be rasterized
-# Last updated by Elaina Passero 04/24/19
+# Last updated by Elaina Passero 04/26/19
 
 # Requirements for running this code:
 # The sequential layers of inundating discharge surfaces has an order that is inherited when it is read in from the directory.
 # Therefore, the naming convention of the IRIC output csv files must be such that they are ordered correctl
 
-get.results <- function(wd,reachName,disunit){
+get.results <- function(wd,reachName,skipnum,disunit){
   
 # Set this to the IRIC_Processing_in_R_v1 folder to run this code
 tempwd <- paste(wd,"results","/",reachName,"/",sep = "") # DEM and iRIC calculation results must be in their own folder
@@ -27,7 +27,7 @@ modeled_q <- parse_number(iric_results)
 
 csvList <- lapply(iric_results, function(i){
   df <- fread(file=paste(wd,"results","/",reachName,"/",i,sep = ""),
-        skip = 2,header = TRUE, sep=",",check.names=TRUE,data.table = FALSE)
+        skip = skipnum,header = TRUE, sep=",",check.names=TRUE,data.table = FALSE)
   cn <- colnames(df)
   colnames(df) <- word(gsub("[.]"," ",cn)) # removes periods from DF column names and leaves only first word
   return(df)
