@@ -1,6 +1,6 @@
 # Function: This script serves as the master script that controls which functions are run and what inputs are used for finding suitable fish habitat
 #         It will later be converted to the script that controls the Shiny App.
-# Last edited by Elaina Passero on 04/26/19
+# Last edited by Elaina Passero on 04/29/19
 
 # Load required packages
 packages <- c("SDMTools","sp","raster","rgeos","rgdal","sf","spatstat","spdep","tidyverse","rasterVis",
@@ -27,19 +27,18 @@ reachL <- 0.61
 
 # Secondary Inputs - Use only if switching between projects
 skipnum <- 1 # number of rows to skip when reading in CSV results
-setRes <- "Yes"
+setRes <- "Yes" # Does the resolution need to be manually set?
 res <- c(1.5,1.5) # resolution of rasters if they need to be manually set
-xLoc <- "x" # location of X coordinate in CSVs
-yLoc <- "y" # location of y coordinate in CSVs
+xLoc <- "x" # field name of X coordinate in CSVs
+yLoc <- "y" # field name of y coordinate in CSVs
 
 # Options: Do not use CheckSub right now
-CheckSub <- 0 # 1 (Yes) or 0 (No). Choose whether or not to check substrate conditions as part of suitable habitat
-LoadExternal <- 0 # 1 (Yes; external rasters) or 0 (No; iRIC results). Choose whether to process externally produced raster files
-# or to rasterize iRIC results.
-RemoveIslands <- 1 # 1 (Yes) or 0 (No). Choose whether or not to remove isolated (single cell) habitat patches
-NormalizeByL <- 1 # 1 (Yes) or 0 (No). Choose whether or not to normalize habitat area by reach length
+CheckSub <- "No" # Yes or No. Choose whether or not to check substrate conditions as part of suitable habitat
+LoadExternal <- "No" # Yes- external rasters or No- rasterize iRIC results.
+RemoveIslands <- "Yes" # Yes or No. Choose whether or not to remove isolated (single cell) habitat patches
+NormalizeByL <- "Yes" # Yes or No. Choose whether or not to normalize habitat area by reach length
 
-if(LoadExternal == "0"){
+if(LoadExternal == "No"){
 ## Format result CSVs and get list of discharges
 source("get.results.R")
 holdList <- get.results(wd,reachName,skipnum,disunit)
@@ -76,7 +75,7 @@ outputs <- lapply(specieslist, function(species){ # builds tables and maps for a
   names(goodHabList) <- lifestages # list of Bricks by lifestage
   
   # Not sure if this is working correctly yet
-  if(CheckSub == "1"){
+  if(CheckSub == "Yes"){
     sub_allspec <- fread(paste(wd,reachName,"_substrate",".csv",sep=""),header=TRUE, sep = ",",data.table = FALSE) # load substrate requirements
     sub_allages <- find.sub(sub_allspec,species) # extract substrate requirements for single species
     goodHabList <- lapply(lifestages, function(b) by.substrate(b, goodHabList, sub_allages))

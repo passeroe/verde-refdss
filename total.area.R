@@ -5,7 +5,7 @@
 total.area <- function(c,goodHabList,modeled_q,RemoveIslands,NormalizeByL,reachL){
   d <- goodHabList[[c]]
   ## remove islands from rasters using clumping
-  if(RemoveIslands == 1){
+  if(RemoveIslands == "Yes"){
     d <- unstack(d)
     f <- lapply(d, function(e){
       habClump <- clump(e,directions=4) # group raster's into clumps using rook's rules
