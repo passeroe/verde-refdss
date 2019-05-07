@@ -1,0 +1,4 @@
+,depthmin,depthmax,velocitymin,velocitymax
+adult_longfindace,0.08,0.55,0,0.3
+juvenile_longfindace,0.05,0.2,0,0.1
+adult_yellowbullhead,0.1,1.7,0,0.3

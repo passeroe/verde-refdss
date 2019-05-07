@@ -1,13 +1,13 @@
 # Function: Optionally removes islands (isolated, single cell habitat areas) from habitat area
 # Calculates total available habitat area by lifestage
-# Last edited by Elaina Passero on 04/24/19
+# Last edited by Elaina Passero on 04/29/19
 
 total.area <- function(c,goodHabList,modeled_q,RemoveIslands,NormalizeByL,reachL){
-  d <- goodHabList[[c]]
+  d <- brick(goodHabList[[c]]) # ensures a single raster layer will "unstack"
   ## remove islands from rasters using clumping
   if(RemoveIslands == "Yes"){
-    d <- unstack(d)
-    f <- lapply(d, function(e){
+    a <- unstack(d)
+    f <- lapply(a, function(e){
       habClump <- clump(e,directions=4) # group raster's into clumps using rook's rules
       clumpFreq <- as.data.frame(freq(habClump)) # create df of frequencies
       excludeID <- clumpFreq$value[which(clumpFreq$count==1)] # find IDs of isolated cells

@@ -1,9 +1,10 @@
 # Function: Puts rasters of total available habitat in order of ascending modeled Q's
 # Returns a list of rasters
-# Last edited by Elaina Passero on 4/22/19
+# Last edited by Elaina Passero on 4/29/19
 
 rast.by.q <- function(c,goodHabList,modeled_q){
-  openBrick <- unstack(goodHabList[[c]])
+  a <- brick(goodHabList[[c]]) # ensures single raster will "unstack"
+  openBrick <- unstack(a)
   names(openBrick) <- modeled_q
   modeled_q <- sort(modeled_q) # sorts from smallest to largest
   orderByQ <- list()

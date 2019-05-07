@@ -1,6 +1,6 @@
 # Function: This script serves as the master script that controls which functions are run and what inputs are used for finding suitable fish habitat
 #         It will later be converted to the script that controls the Shiny App.
-# Last edited by Elaina Passero on 04/29/19
+# Last edited by Elaina Passero on 05/06/19
 
 # Load required packages
 packages <- c("SDMTools","sp","raster","rgeos","rgdal","sf","spatstat","spdep","tidyverse","rasterVis",
@@ -18,23 +18,24 @@ wd <- "C:/Users/epassero/Desktop/VRDSS/verde-refdss/"
 #wd <- "/Users/Morrison/Documents/Active Research Projects/Verde REFDSS/verde-refdss/" # Set path to local repository
 setwd(wd)
 habMets <- list("depth","velocity") #Variables from iRIC calculation result used for habitat analysis ex: Velocity..magnitude.
-specieslist <- species
+species <- "longfindace"
 lifestages <- list("adult") #lifestages from oldest to youngest; must match order in HSC table
 reachName <- "Cherry_Braid" # Should match name of folder with results
 DEM <- "braidallpts_DEM.tif" # Name of DEM used in iRIC: VerdeBeasley1Elev.tif or smrf_DEM_v241.tif or braidallpts_DEM.tif. If loading externally put NA
 disunit <- "cfs" #units of discharge
 reachL <- 0.61
+subName <- "substrates_dissolve"
 
 # Secondary Inputs - Use only if switching between projects
 skipnum <- 1 # number of rows to skip when reading in CSV results
-setRes <- "Yes" # Does the resolution need to be manually set?
-res <- c(1.5,1.5) # resolution of rasters if they need to be manually set
+setRes <- "No" # Does the resolution need to be manually set?
+res <- c(0.25,0.25) # resolution of rasters if they need to be manually set
 xLoc <- "x" # field name of X coordinate in CSVs
 yLoc <- "y" # field name of y coordinate in CSVs
 
 # Options: Do not use CheckSub right now
-CheckSub <- "No" # Yes or No. Choose whether or not to check substrate conditions as part of suitable habitat
-LoadExternal <- "No" # Yes- external rasters or No- rasterize iRIC results.
+CheckSub <- "Yes" # Yes or No. Choose whether or not to check substrate conditions as part of suitable habitat
+LoadExternal <- "Yes" # Yes- external rasters or No- rasterize iRIC results.
 RemoveIslands <- "Yes" # Yes or No. Choose whether or not to remove isolated (single cell) habitat patches
 NormalizeByL <- "Yes" # Yes or No. Choose whether or not to normalize habitat area by reach length
 
@@ -46,6 +47,10 @@ csvList <- holdList$csvList
 modeled_q <- holdList$modeled_q
 rm(holdList)
 
+### for cherry Creek ###
+#source("exp.shp.R")
+#resultsPts <- lapply(habMets, function(a) exp.shp(a,csvList,wd,DEM,reachName,xLoc,yLoc))
+
 ## Convert iRIC outputs to rasterBricks by variable
 source("iric.process.smr.R")
 outValRast <- list()
@@ -54,17 +59,17 @@ names(outValRast) <-habMets
 rm(csvList)} else{
 
 ## Load in external rasterBricks and discharges
-source("load.delaware.R")
-reachCode <- "del1"
-outValRast <- load.delaware(wd,reachName,reachCode)
+source("load.cherry.R")
+#reachCode <- "del1"
+outValRast <- load.cherry(wd,reachName,reachCode)
 names(outValRast)<-c(habMets,"modeled_q")
 modeled_q <- outValRast$modeled_q
 outValRast[length(outValRast)]<-NULL
 }
 
 ##### Run for all species #####
-outputs <- list()
-outputs <- lapply(specieslist, function(species){ # builds tables and maps for all species in list
+#outputs <- list()
+#outputs <- lapply(specieslist, function(species){ # builds tables and maps for all species in list
   
   ## Reclassify Bricks with hydraulic and substrate HSC by lifestage
   source("find.hsc.R"); source("bricks.rc.R"); source("by.substrate.R"); source("find.sub.R")
@@ -78,7 +83,7 @@ outputs <- lapply(specieslist, function(species){ # builds tables and maps for a
   if(CheckSub == "Yes"){
     sub_allspec <- fread(paste(wd,reachName,"_substrate",".csv",sep=""),header=TRUE, sep = ",",data.table = FALSE) # load substrate requirements
     sub_allages <- find.sub(sub_allspec,species) # extract substrate requirements for single species
-    goodHabList <- lapply(lifestages, function(b) by.substrate(b, goodHabList, sub_allages))
+    goodHabList <- lapply(lifestages, function(b) by.substrate(b, goodHabList, sub_allages,wd,reachName,subName))
     names(goodHabList) <- lifestages
     } # end of if statement
   
@@ -92,15 +97,18 @@ outputs <- lapply(specieslist, function(species){ # builds tables and maps for a
   rastByQ <- lapply(lifestages, function(c) rast.by.q(c,goodHabList,modeled_q))
   names(rastByQ) <- lifestages
   
-  outputs$areaLookTab <- areaLookTab
-  outputs$rastByQ <- rastByQ
-  return(outputs)
-}) # end of species list function
-names(outputs) <- specieslist
-tables <- lapply(specieslist, function(species){
-  outputs[[species]]$areaLookTab
-  })
-names(tables) <- specieslist
+#  outputs$areaLookTab <- areaLookTab
+#  outputs$rastByQ <- rastByQ
+#  return(outputs)
+
+#  }) # end of species list function
+
+# Put tables in a nice format
+#names(outputs) <- specieslist
+#tables <- lapply(specieslist, function(species){
+#  outputs[[species]]$areaLookTab
+#  })
+#names(tables) <- specieslist
 
 
 ## Read in hydrograph
