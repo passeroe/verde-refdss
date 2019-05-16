@@ -4,20 +4,20 @@
 
 
 ### Begin function ###
-bricks.rc <- function(b,outValRast,hsc_allages,habMets){
-  pos <- grep(b,hsc_allages,ignore.case = TRUE)
+bricks.rc <- function(a,outValRast,hsc_allages,habMets){
+  pos <- grep(a,hsc_allages,ignore.case = TRUE)
   hsc <- hsc_allages[pos,] # HSC for current lifestage
   
   acceptRast <- outValRast[[1]]*0 # creates rasterBrick of all 0's where acceptable cells will be added to by discharge
   accept <- 0
   
-  for(i in 1:length(habMets)){
-      hm <- grep(habMets[i],names(hsc),ignore.case = TRUE) # position of habitat metric in HSC table
+  for(m in 1:length(habMets)){
+      hm <- grep(habMets[m],names(hsc),ignore.case = TRUE) # position of habitat metric in HSC table
       pMin <- min(hm) 
       pMax <- max(hm) # set positions of min and max values for habitat metric
       sDepth <- c(0,hsc[,pMin],0, hsc[,pMin],hsc[,pMax],1, hsc[,pMax],999,0)
       rcDMat <- matrix(sDepth, ncol=3, byrow=TRUE)
-      rcDrast <- reclassify(outValRast[[i]], rcDMat)
+      rcDrast <- reclassify(outValRast[[m]], rcDMat)
       acceptRast <- acceptRast + rcDrast
       accept <- accept + 1
   } # end of for loop

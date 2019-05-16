@@ -1,6 +1,6 @@
 # Function: This script serves as the master script that controls which functions are run and what inputs are used for finding suitable fish habitat
 #         It will later be converted to the script that controls the Shiny App.
-# Last edited by Elaina Passero on 05/06/19
+# Last edited by Elaina Passero on 05/16/19
 
 # Load required packages
 packages <- c("SDMTools","sp","raster","rgeos","rgdal","sf","spatstat","spdep","tidyverse","rasterVis",
@@ -18,13 +18,13 @@ wd <- "C:/Users/epassero/Desktop/VRDSS/verde-refdss/"
 #wd <- "/Users/Morrison/Documents/Active Research Projects/Verde REFDSS/verde-refdss/" # Set path to local repository
 setwd(wd)
 habMets <- list("depth","velocity") #Variables from iRIC calculation result used for habitat analysis ex: Velocity..magnitude.
-species <- "longfindace"
+species <- "speckleddace"
 lifestages <- list("adult") #lifestages from oldest to youngest; must match order in HSC table
 reachName <- "Cherry_Braid" # Should match name of folder with results
 DEM <- "braidallpts_DEM.tif" # Name of DEM used in iRIC: VerdeBeasley1Elev.tif or smrf_DEM_v241.tif or braidallpts_DEM.tif. If loading externally put NA
 disunit <- "cfs" #units of discharge
 reachL <- 0.61
-subName <- "substrates_dissolve"
+subName <- "sub_dissolve"
 
 # Secondary Inputs - Use only if switching between projects
 skipnum <- 1 # number of rows to skip when reading in CSV results
@@ -54,7 +54,7 @@ rm(holdList)
 ## Convert iRIC outputs to rasterBricks by variable
 source("iric.process.smr.R")
 outValRast <- list()
-outValRast <- lapply(habMets, function(a) iric.process.smr(a,csvList,wd,DEM,reachName,setRes,xLoc,yLoc))
+outValRast <- lapply(habMets, function(m) iric.process.smr(m,csvList,wd,DEM,reachName,setRes,xLoc,yLoc))
 names(outValRast) <-habMets
 rm(csvList)} else{
 
@@ -68,47 +68,47 @@ outValRast[length(outValRast)]<-NULL
 }
 
 ##### Run for all species #####
-#outputs <- list()
-#outputs <- lapply(specieslist, function(species){ # builds tables and maps for all species in list
+outputs <- list()
+outputs <- lapply(specieslist, function(species){ # builds tables and maps for all species in list
   
   ## Reclassify Bricks with hydraulic and substrate HSC by lifestage
   source("find.hsc.R"); source("bricks.rc.R"); source("by.substrate.R"); source("find.sub.R")
   
   hsc_allspec<-fread(paste(wd,reachName,"_hsc",".csv",sep = ""), header=TRUE, sep=",",data.table = FALSE)
   hsc_allages <- find.hsc(hsc_allspec,species) # extract HSC for single species
-  goodHabList <- lapply(lifestages, function(b) bricks.rc(b,outValRast,hsc_allages,habMets))
+  goodHabList <- lapply(lifestages, function(a) bricks.rc(a,outValRast,hsc_allages,habMets))
   names(goodHabList) <- lifestages # list of Bricks by lifestage
   
   # Not sure if this is working correctly yet
   if(CheckSub == "Yes"){
     sub_allspec <- fread(paste(wd,reachName,"_substrate",".csv",sep=""),header=TRUE, sep = ",",data.table = FALSE) # load substrate requirements
     sub_allages <- find.sub(sub_allspec,species) # extract substrate requirements for single species
-    goodHabList <- lapply(lifestages, function(b) by.substrate(b, goodHabList, sub_allages,wd,reachName,subName))
+    goodHabList <- lapply(lifestages, function(a) by.substrate(a, goodHabList, sub_allages,wd,reachName,subName))
     names(goodHabList) <- lifestages
     } # end of if statement
   
   ## Total available habitat area by lifestage
   source("total.area.R")
-  areaLookTab <- lapply(lifestages, function(c) total.area(c,goodHabList,modeled_q,RemoveIslands,NormalizeByL,reachL))
+  areaLookTab <- lapply(lifestages, function(a) total.area(a,goodHabList,modeled_q,RemoveIslands,NormalizeByL,reachL))
   names(areaLookTab) <- lifestages
   
   ## Order rasters of total available habitat by modeled discharge
   source("rast.by.q.R")
-  rastByQ <- lapply(lifestages, function(c) rast.by.q(c,goodHabList,modeled_q))
+  rastByQ <- lapply(lifestages, function(a) rast.by.q(a,goodHabList,modeled_q))
   names(rastByQ) <- lifestages
   
-#  outputs$areaLookTab <- areaLookTab
-#  outputs$rastByQ <- rastByQ
-#  return(outputs)
+  outputs$areaLookTab <- areaLookTab
+  outputs$rastByQ <- rastByQ
+  return(outputs)
 
-#  }) # end of species list function
+  }) # end of species list function
 
 # Put tables in a nice format
-#names(outputs) <- specieslist
-#tables <- lapply(specieslist, function(species){
-#  outputs[[species]]$areaLookTab
-#  })
-#names(tables) <- specieslist
+names(outputs) <- specieslist
+tables <- lapply(specieslist, function(species){
+  outputs[[species]]$areaLookTab
+  })
+names(tables) <- specieslist
 
 
 ## Read in hydrograph
@@ -117,12 +117,12 @@ hydrograph$date <- as.Date(hydrograph$date, format="%m/%d/%Y")
 
 ## Generate Interpolated Discharge-Area Lookup Tables from Hydrograph and Regression
 source("interp.table.R")
-interTab <- lapply(lifestages, function(t) interp.table(t,hydrograph,areaLookTab))
+interTab <- lapply(lifestages, function(a) interp.table(a,hydrograph,areaLookTab))
 names(interTab) <- lifestages
 
 ## Generate and view plots of total area through the hydrograph
 source("interp.plot.R")
-interPlots <- lapply(lifestages, function(t) interp.plot(t,interTab))
+interPlots <- lapply(lifestages, function(a) interp.plot(a,interTab))
 head(interPlots)
 
 
@@ -143,5 +143,5 @@ plot_ly(plottable,x=~discharge) %>%
   add_lines(y=plottable[,8],name=names(plottable[8]),line=list(color='green')) %>%
   add_lines(y=plottable[,9],name=names(plottable[9]),line=list(color='purple')) %>%
   add_lines(y=plottable[,10],name=names(plottable[10]),line=list(color='pink')) %>%
-  layout(title="Habitat-discharge for Braided site w/o LWD",xaxis=list(title="Discharge (cfs)"),yaxis=list(title="Normalized Area (m2/km)"))
+  layout(title="Habitat-discharge for Braided site w/ Substrate w/o LWD",xaxis=list(title="Discharge (cfs)"),yaxis=list(title="Normalized Area (m2/km)"))
   
