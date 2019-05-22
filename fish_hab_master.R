@@ -1,6 +1,6 @@
 # Function: This script serves as the master script that controls which functions are run and what inputs are used for finding suitable fish habitat
 #         It will later be converted to the script that controls the Shiny App.
-# Last edited by Elaina Passero on 05/16/19
+# Last edited by Elaina Passero on 05/21/19
 
 # Load required packages
 packages <- c("SDMTools","sp","raster","rgeos","rgdal","sf","spatstat","spdep","tidyverse","rasterVis",
@@ -13,18 +13,19 @@ if (length(setdiff(packages, rownames(installed.packages()))) > 0) {
 # load the installed libraries in the packages list 
 lapply(packages,library,character.only=TRUE)
 
-# Set Inputs
+# Load Inputs from set.inputs.R
 wd <- "C:/Users/epassero/Desktop/VRDSS/verde-refdss/"
 #wd <- "/Users/Morrison/Documents/Active Research Projects/Verde REFDSS/verde-refdss/" # Set path to local repository
 setwd(wd)
 habMets <- list("depth","velocity") #Variables from iRIC calculation result used for habitat analysis ex: Velocity..magnitude.
-species <- "speckleddace"
+species <- specieslist
 lifestages <- list("adult") #lifestages from oldest to youngest; must match order in HSC table
 reachName <- "Cherry_Braid" # Should match name of folder with results
 DEM <- "braidallpts_DEM.tif" # Name of DEM used in iRIC: VerdeBeasley1Elev.tif or smrf_DEM_v241.tif or braidallpts_DEM.tif. If loading externally put NA
 disunit <- "cfs" #units of discharge
 reachL <- 0.61
 subName <- "sub_dissolve"
+xDays <- 7 # number of days for moving discharge and area statistics
 
 # Secondary Inputs - Use only if switching between projects
 skipnum <- 1 # number of rows to skip when reading in CSV results
@@ -33,11 +34,13 @@ res <- c(0.25,0.25) # resolution of rasters if they need to be manually set
 xLoc <- "x" # field name of X coordinate in CSVs
 yLoc <- "y" # field name of y coordinate in CSVs
 
-# Options: Do not use CheckSub right now
+# Options
 CheckSub <- "Yes" # Yes or No. Choose whether or not to check substrate conditions as part of suitable habitat
 LoadExternal <- "Yes" # Yes- external rasters or No- rasterize iRIC results.
 RemoveIslands <- "Yes" # Yes or No. Choose whether or not to remove isolated (single cell) habitat patches
 NormalizeByL <- "Yes" # Yes or No. Choose whether or not to normalize habitat area by reach length
+CalcXDayStats <- "No" # Yes or No. Choose whether or not to calculate X-day statistics. Must supply number of days.
+
 
 if(LoadExternal == "No"){
 ## Format result CSVs and get list of discharges
@@ -66,6 +69,10 @@ names(outValRast)<-c(habMets,"modeled_q")
 modeled_q <- outValRast$modeled_q
 outValRast[length(outValRast)]<-NULL
 }
+
+## Read in hydrograph
+hydrograph <- na.omit(fread(paste(wd,reachName,"_hydrograph",".csv",sep=""),header=TRUE, sep = ",",data.table=FALSE))
+hydrograph$date <- as.Date(hydrograph$date, format="%m/%d/%Y")
 
 ##### Run for all species #####
 outputs <- list()
@@ -97,33 +104,41 @@ outputs <- lapply(specieslist, function(species){ # builds tables and maps for a
   rastByQ <- lapply(lifestages, function(a) rast.by.q(a,goodHabList,modeled_q))
   names(rastByQ) <- lifestages
   
+  ## Generate Interpolated Discharge-Area Lookup Tables from Hydrograph and Regression
+  source("interp.table.R")
+  interTab <- lapply(lifestages, function(a) interp.table(a,hydrograph,areaLookTab,NormalizeByL))
+  names(interTab) <- lifestages
+  
+  ## Generate and view plots of total area through the hydrograph
+  #source("interp.plot.R")
+  #interPlots <- lapply(lifestages, function(a) interp.plot(a,interTab,NormalizeByL))
+  #head(interPlots)
+  
+  ## Generate Data Frames of moving X-Day area and discharge statistics
+  if(CalcXDayStats=="Yes"){
+    source("x.day.stats.R")
+    xDayStats <- lapply(lifestages, function(a) x.day.stats(a,interTab,xDays))
+    names(xDayStats) <- lifestages
+  }
+  
+  source("avg.month.area.R")
+  avgMonthlyArea <- lapply(lifestages, function(a) avg.month.area(a,interTab))
+  names(avgMonthlyArea) <- lifestages
+  
   outputs$areaLookTab <- areaLookTab
   outputs$rastByQ <- rastByQ
+  outputs$avgMonthlyArea <- avgMonthlyArea
   return(outputs)
 
   }) # end of species list function
 
 # Put tables in a nice format
 names(outputs) <- specieslist
+
 tables <- lapply(specieslist, function(species){
   outputs[[species]]$areaLookTab
   })
 names(tables) <- specieslist
-
-
-## Read in hydrograph
-hydrograph <- na.omit(fread(paste(wd,reachName,"_hydrograph",".csv",sep=""),header=TRUE, sep = ",",data.table=FALSE))
-hydrograph$date <- as.Date(hydrograph$date, format="%m/%d/%Y")
-
-## Generate Interpolated Discharge-Area Lookup Tables from Hydrograph and Regression
-source("interp.table.R")
-interTab <- lapply(lifestages, function(a) interp.table(a,hydrograph,areaLookTab))
-names(interTab) <- lifestages
-
-## Generate and view plots of total area through the hydrograph
-source("interp.plot.R")
-interPlots <- lapply(lifestages, function(a) interp.plot(a,interTab))
-head(interPlots)
 
 
 ## Generate plots of length-normalized area by discharge for all species
