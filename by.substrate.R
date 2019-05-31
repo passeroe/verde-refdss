@@ -1,21 +1,22 @@
 # This script is used to get suitable habitat that meets substrate type requirements.
-# Currently I am creating fake substrate type files until I have more information.
-# Last edited by Elaina Passero on 4/26/19
+# Last edited by Elaina Passero on 5/30/19
 
 ### Begin Function ###
-by.substrate <- function(b, goodHabList, sub_allages){
-  # create fake substrate layer; process is different depending on which dataset you are running
-  fakeSub <- iricValRast[[1]]$cms_0.67# looking at depth
-  fSub <- c(0,0.5,0, 0.5,0.6,1, 0.6,0.7,2, 0.7,0.8,3, 0.8,999,4) # arbitrarily creating reclassification criteria
-  rcFSMat <- matrix(fSub,ncol=3,byrow=TRUE)
-  fakeSub <- reclassify(fakeSub,rcFSMat)
+by.substrate <- function(a, goodHabList, sub_allages,rastSubMap){
+  pos <- grep(a,names(sub_allages),ignore.case = TRUE)
+  subReq <- sub_allages[,pos] # substrate requirement for current lifestage
+  subReq <- as.numeric(subReq[!is.na(subReq)]) # remove any NA values
   
-  # Sets cells with unacceptable substrate types to NA and acceptable types to 1
-  subTab <- subTab[!is.na(subTab)] # remove any NA values
-  fakeSub[fakeSub != subTab] <- NA
-  fakeSub[fakeSub == subTab] <- 1
-
+  subSeq <- seq(min(subReq),max(subReq)+1,by=1)
+  subRC <- data.frame(from=c(-999,subSeq),to=c(subSeq,999))
+  subRC$become <- ifelse(subRC$from %in% subReq,1,0)
+  rcl <- as.matrix.data.frame(subRC,ncol=3)
+  
+  goodRast <- goodHabList[[a]] # raster of suitable habitat for current lifestage
+  
+  rcSubMap <- reclassify(rastSubMap,rcl,right=FALSE) # reclassify substrate map based on substrate criteria
+  
   # Mask
-  bySubBrick <- mask(hhList,fakeSub,maskvalue=NA,updatevalue=NA) # if cells not covered by acceptable substrate or are NA, they are set to NA
+  bySubBrick <- mask(goodRast,rcSubMap,inverse=TRUE,maskvalue=1,updatevalue=NA) # if cells not covered by acceptable substrate or are NA, they are set to NA
   return(bySubBrick)
 }

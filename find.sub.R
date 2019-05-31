@@ -3,6 +3,7 @@
 
 find.sub <- function(sub_allspec,species){
   colN <- grep(species,names(sub_allspec),ignore.case = TRUE)
-  sub_allages <- sub_allspec[,colN]
+  titles <- names(sub_allspec)
+  sub_allages <- sub_allspec[colN]
   return(sub_allages)
 }

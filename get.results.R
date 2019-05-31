@@ -3,7 +3,7 @@
 
 # Requirements for running this code:
 # The sequential layers of inundating discharge surfaces has an order that is inherited when it is read in from the directory.
-# Therefore, the naming convention of the IRIC output csv files must be such that they are ordered correctl
+# Therefore, the naming convention of the IRIC output csv files must be such that they are ordered correctly
 
 get.results <- function(wd,reachName,skipnum,disunit){
   
