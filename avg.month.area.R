@@ -1,6 +1,6 @@
 # This function calculates monthly area using central 10-day lowest consecutive area values
 # Returns a data frame with average monthly area
-# Last edited by Elaina Passero on 5/21/19
+# Last edited by Elaina Passero on 5/30/19
 
 avg.month.area <- function(a,interTab){
   # Monthly stats using lowest consecutive 10 days
@@ -17,6 +17,6 @@ avg.month.area <- function(a,interTab){
   tblTab <- tbl_df(low10DF)
   runMonth <- group_by(tblTab,year(date)) %>%
     group_by(month(date),add=TRUE) %>%
-    summarise(MonAvgLowArea=mean(low10DAvgArea))
+    summarise(MonAvgLowArea=min(low10DAvgArea))
   return(runMonth)
 }

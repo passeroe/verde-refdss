@@ -1,6 +1,6 @@
 # Function: This script serves as the master script that controls which functions are run and what inputs are used for finding suitable fish habitat
 #         It will later be converted to the script that controls the Shiny App.
-# Last edited by Elaina Passero on 05/21/19
+# Last edited by Elaina Passero on 05/30/19
 
 # Load required packages
 packages <- c("SDMTools","sp","raster","rgeos","rgdal","sf","spatstat","spdep","tidyverse","rasterVis",
@@ -9,38 +9,57 @@ packages <- c("SDMTools","sp","raster","rgeos","rgdal","sf","spatstat","spdep","
 if (length(setdiff(packages, rownames(installed.packages()))) > 0) {    
   install.packages(setdiff(packages, rownames(installed.packages())))  
 }
-
 # load the installed libraries in the packages list 
 lapply(packages,library,character.only=TRUE)
 
-# Load Inputs from set.inputs.R
+### Begin Inputs ###
+
+## Primary Inputs
 wd <- "C:/Users/epassero/Desktop/VRDSS/verde-refdss/"
 #wd <- "/Users/Morrison/Documents/Active Research Projects/Verde REFDSS/verde-refdss/" # Set path to local repository
 setwd(wd)
 habMets <- list("depth","velocity") #Variables from iRIC calculation result used for habitat analysis ex: Velocity..magnitude.
+specieslist <- c("longfindace","yellowbullhead","desertsucker","sonoransucker","redshiner","roundtailchub","greensunfish","fatheadminnow","speckleddace")
 species <- specieslist
 lifestages <- list("adult") #lifestages from oldest to youngest; must match order in HSC table
 reachName <- "Cherry_Braid" # Should match name of folder with results
-DEM <- "braidallpts_DEM.tif" # Name of DEM used in iRIC: VerdeBeasley1Elev.tif or smrf_DEM_v241.tif or braidallpts_DEM.tif. If loading externally put NA
 disunit <- "cfs" #units of discharge
-reachL <- 0.61
-subName <- "sub_dissolve"
-xDays <- 7 # number of days for moving discharge and area statistics
 
-# Secondary Inputs - Use only if switching between projects
-skipnum <- 1 # number of rows to skip when reading in CSV results
-setRes <- "No" # Does the resolution need to be manually set?
-res <- c(0.25,0.25) # resolution of rasters if they need to be manually set
-xLoc <- "x" # field name of X coordinate in CSVs
-yLoc <- "y" # field name of y coordinate in CSVs
+## Secondary Inputs - Use only if switching between projects
+# Yes- external rasters or No- rasterize iRIC results. Inputs required if No.
+LoadExternal <- "Yes"; if(LoadExternal=="No"){
+  skipnum <- 1 # number of rows to skip when reading in CSV results
+  xLoc <- "x" # field name of X coordinate in CSVs
+  yLoc <- "y" # field name of y coordinate in CSVs
+  DEM <- "braidallpts_DEM.tif" # Name of DEM used in iRIC: VerdeBeasley1Elev.tif, smrf_DEM_v241.tif, braidallpts_DEM.tif.
+  # Does the resolution of the rasters need to be manually set? If No, DEM resolution will be used.
+  setRes <- "No"; if(setRes=="Yes"){
+    res <- c(0.25,0.25)} # resolution of rasters if they need to be manually set
+} # end of internal rasterization inputs
 
-# Options
-CheckSub <- "Yes" # Yes or No. Choose whether or not to check substrate conditions as part of suitable habitat
-LoadExternal <- "Yes" # Yes- external rasters or No- rasterize iRIC results.
-RemoveIslands <- "Yes" # Yes or No. Choose whether or not to remove isolated (single cell) habitat patches
-NormalizeByL <- "Yes" # Yes or No. Choose whether or not to normalize habitat area by reach length
-CalcXDayStats <- "No" # Yes or No. Choose whether or not to calculate X-day statistics. Must supply number of days.
+## Options - If set to No, inputs are not required for option
+# Yes or No. Choose whether or not to check substrate conditions as part of suitable habitat
+CheckSub <- "Yes"; if(CheckSub=="Yes"){
+  subName <- "sub_dissolve"}
 
+# Yes or No. Choose whether or not to remove isolated (single cell) habitat patches
+RemoveIslands <- "No"; if(RemoveIslands=="Yes"){
+  islandSize <- 2} # number of raster cells that is considered too small of a habitat patch
+
+# Yes or No. Choose whether or not to normalize habitat area by reach length
+NormalizeByL <- "Yes"; if(NormalizeByL=="Yes"){
+  reachL <- 0.61} # Reach length in km. If not normalizing set equal to 1.
+
+# Yes or No. Choose whether or not to calculate X-day statistics. Must supply number of days.
+CalcXDayStats <- "No"; if(CalcXDayStats=="Yes"){
+  xDays <- 7} # number of days for moving discharge and area statistics
+
+# Yes or No. Yes - limit analysis to supplied dates. No - consider entire hydrograph.
+DateRange <- "Yes"; if(DateRange=="Yes"){
+  startDate <- "1993-10-01" # "YYYY-MM-DD"
+  endDate <- "1994-03-30"} # "YYYY-MM-DD"
+
+### Begin Processing ###
 
 if(LoadExternal == "No"){
 ## Format result CSVs and get list of discharges
@@ -73,6 +92,17 @@ outValRast[length(outValRast)]<-NULL
 ## Read in hydrograph
 hydrograph <- na.omit(fread(paste(wd,reachName,"_hydrograph",".csv",sep=""),header=TRUE, sep = ",",data.table=FALSE))
 hydrograph$date <- as.Date(hydrograph$date, format="%m/%d/%Y")
+if(DateRange=="Yes"){
+  hydrograph <- subset(hydrograph, date > as.Date(startDate)) 
+  hydrograph <- subset(hydrograph, date < as.Date(endDate))
+}
+
+## Load substrate
+if(CheckSub == "Yes"){
+  baseRast <- outValRast[[1]][[1]] # will be overwritten during rasterization - provides setup
+  subMap <- readOGR(dsn=paste(wd,"results","/",reachName,sep = ""),layer=subName) # read in substrate shapefile
+  rastSubMap <- rasterize(subMap,baseRast,field=subMap@data$substrate,update=TRUE)
+}
 
 ##### Run for all species #####
 outputs <- list()
@@ -90,13 +120,13 @@ outputs <- lapply(specieslist, function(species){ # builds tables and maps for a
   if(CheckSub == "Yes"){
     sub_allspec <- fread(paste(wd,reachName,"_substrate",".csv",sep=""),header=TRUE, sep = ",",data.table = FALSE) # load substrate requirements
     sub_allages <- find.sub(sub_allspec,species) # extract substrate requirements for single species
-    goodHabList <- lapply(lifestages, function(a) by.substrate(a, goodHabList, sub_allages,wd,reachName,subName))
+    goodHabList <- lapply(lifestages, function(a) by.substrate(a, goodHabList, sub_allages,rastSubMap))
     names(goodHabList) <- lifestages
     } # end of if statement
   
   ## Total available habitat area by lifestage
   source("total.area.R")
-  areaLookTab <- lapply(lifestages, function(a) total.area(a,goodHabList,modeled_q,RemoveIslands,NormalizeByL,reachL))
+  areaLookTab <- lapply(lifestages, function(a) total.area(a,goodHabList,modeled_q,RemoveIslands,NormalizeByL,reachL,islandSize))
   names(areaLookTab) <- lifestages
   
   ## Order rasters of total available habitat by modeled discharge

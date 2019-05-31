@@ -1,6 +1,6 @@
 # This function will add total available and total normalized area (if applicable) to the hydrograph table
 # Will use simple linear interpolation to fill in the areas for any discharges not run in iRIC.
-# Last updated by Elaina Passero on 5/21/19
+# Last updated by Elaina Passero on 5/30/19
 
 interp.table <- function(a,hydrograph,areaLookTab,NormalizeByL){
   aLT <- areaLookTab[[a]]
@@ -20,9 +20,10 @@ interp.table <- function(a,hydrograph,areaLookTab,NormalizeByL){
   if(NormalizeByL=="Yes"){
     hydrograph$normalizedArea <- intUniQ[match(hydrograph$discharge,intUniQ$discharge),"normalizedArea"]
   }
+  hydrograph$normalizedArea[hydrograph$discharge <= min(modeled_q)] <- 0 # 0 area for any discharges below the minimum modeled Q
   return(hydrograph)
 }
 
 
- 
+
 
