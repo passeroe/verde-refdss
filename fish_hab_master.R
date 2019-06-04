@@ -1,6 +1,6 @@
 # Function: This script serves as the master script that controls which functions are run and what inputs are used for finding suitable fish habitat
 #         It will later be converted to the script that controls the Shiny App.
-# Last edited by Elaina Passero on 05/30/19
+# Last edited by Elaina Passero on 06/03/19
 
 # Load required packages
 packages <- c("SDMTools","sp","raster","rgeos","rgdal","sf","spatstat","spdep","tidyverse","rasterVis",
@@ -48,16 +48,21 @@ RemoveIslands <- "No"; if(RemoveIslands=="Yes"){
 
 # Yes or No. Choose whether or not to normalize habitat area by reach length
 NormalizeByL <- "Yes"; if(NormalizeByL=="Yes"){
-  reachL <- 0.61} # Reach length in km. If not normalizing set equal to 1.
+  reachL <- 0.61
+  unitL <- "km"} # Reach length in km. If not normalizing set equal to 1.
 
-# Yes or No. Choose whether or not to calculate X-day statistics. Must supply number of days.
-CalcXDayStats <- "No"; if(CalcXDayStats=="Yes"){
-  xDays <- 7} # number of days for moving discharge and area statistics
-
-# Yes or No. Yes - limit analysis to supplied dates. No - consider entire hydrograph.
-DateRange <- "Yes"; if(DateRange=="Yes"){
-  startDate <- "1993-10-01" # "YYYY-MM-DD"
-  endDate <- "1994-03-30"} # "YYYY-MM-DD"
+# Yes or No. Will a hydrograph be supplied? If "No" CalcXDayStats and DateRange can be left blank.
+FlowScenario <- "Yes"; if(FlowScenario=="Yes"){
+ 
+   # Yes or No. Choose whether or not to calculate X-day statistics. Must supply number of days.
+  CalcXDayStats <- "No"; if(CalcXDayStats=="Yes"){
+    xDays <- 7} # number of days for moving discharge and area statistics
+  
+  # Yes or No. Yes - limit analysis to supplied dates. No - consider entire hydrograph.
+  DateRange <- "Yes"; if(DateRange=="Yes"){
+    startDate <- "1993-10-01" # "YYYY-MM-DD"
+    endDate <- "1994-03-30"} # "YYYY-MM-DD"
+} # End of flow scenario related options
 
 ### Begin Processing ###
 
@@ -89,12 +94,14 @@ modeled_q <- outValRast$modeled_q
 outValRast[length(outValRast)]<-NULL
 }
 
-## Read in hydrograph
-hydrograph <- na.omit(fread(paste(wd,reachName,"_hydrograph",".csv",sep=""),header=TRUE, sep = ",",data.table=FALSE))
-hydrograph$date <- as.Date(hydrograph$date, format="%m/%d/%Y")
-if(DateRange=="Yes"){
-  hydrograph <- subset(hydrograph, date > as.Date(startDate)) 
-  hydrograph <- subset(hydrograph, date < as.Date(endDate))
+## Read in hydrograph if one is supplied
+if(FlowScenario == "Yes"){
+  hydrograph <- na.omit(fread(paste(wd,reachName,"_hydrograph",".csv",sep=""),header=TRUE, sep = ",",data.table=FALSE))
+  hydrograph$date <- as.Date(hydrograph$date, format="%m/%d/%Y")
+  if(DateRange=="Yes"){
+    hydrograph <- subset(hydrograph, date > as.Date(startDate)) 
+    hydrograph <- subset(hydrograph, date < as.Date(endDate))
+  }
 }
 
 ## Load substrate
@@ -134,37 +141,45 @@ outputs <- lapply(specieslist, function(species){ # builds tables and maps for a
   rastByQ <- lapply(lifestages, function(a) rast.by.q(a,goodHabList,modeled_q))
   names(rastByQ) <- lifestages
   
-  ## Generate Interpolated Discharge-Area Lookup Tables from Hydrograph and Regression
-  source("interp.table.R")
-  interTab <- lapply(lifestages, function(a) interp.table(a,hydrograph,areaLookTab,NormalizeByL))
-  names(interTab) <- lifestages
-  
-  ## Generate and view plots of total area through the hydrograph
-  #source("interp.plot.R")
-  #interPlots <- lapply(lifestages, function(a) interp.plot(a,interTab,NormalizeByL))
-  #head(interPlots)
-  
-  ## Generate Data Frames of moving X-Day area and discharge statistics
-  if(CalcXDayStats=="Yes"){
-    source("x.day.stats.R")
-    xDayStats <- lapply(lifestages, function(a) x.day.stats(a,interTab,xDays))
-    names(xDayStats) <- lifestages
-  }
-  
-  source("avg.month.area.R")
-  avgMonthlyArea <- lapply(lifestages, function(a) avg.month.area(a,interTab))
-  names(avgMonthlyArea) <- lifestages
-  
-  outputs$areaLookTab <- areaLookTab
-  outputs$rastByQ <- rastByQ
-  outputs$avgMonthlyArea <- avgMonthlyArea
-  return(outputs)
-
+  ## Generate Interpolated Discharge-Area Lookup Tables from Hydrograph and Regression if hydrograph provided
+  if(FlowScenario=="Yes"){
+    source("interp.table.R")
+    interTab <- lapply(lifestages, function(a) interp.table(a,hydrograph,areaLookTab,NormalizeByL))
+    names(interTab) <- lifestages
+    
+    ## Generate and view plots of total area through the hydrograph
+    #source("interp.plot.R")
+    #interPlots <- lapply(lifestages, function(a) interp.plot(a,interTab,NormalizeByL))
+    #head(interPlots)
+    
+    ## Generate Data Frames of moving X-Day area and discharge statistics
+    if(CalcXDayStats=="Yes"){
+      source("x.day.stats.R")
+      xDayStats <- lapply(lifestages, function(a) x.day.stats(a,interTab,xDays))
+      names(xDayStats) <- lifestages
+    }
+    
+    source("avg.month.area.R")
+    avgMonthlyArea <- lapply(lifestages, function(a) avg.month.area(a,interTab))
+    names(avgMonthlyArea) <- lifestages
+    # end of flow scenario dependent processes
+    
+    # condense outputs into single list
+    outputs$areaLookTab <- areaLookTab
+    outputs$rastByQ <- rastByQ
+    outputs$avgMonthlyArea <- avgMonthlyArea
+    return(outputs)
+    
+  } else{ # outputs not including any flow-scenario related outputs
+    # condense outputs into a single list
+    outputs$areaLookTab <- areaLookTab
+    outputs$rastByQ <- rastByQ
+    return(outputs)}
   }) # end of species list function
 
-# Put tables in a nice format
 names(outputs) <- specieslist
 
+# Put tables in a nice format
 tables <- lapply(specieslist, function(species){
   outputs[[species]]$areaLookTab
   })
