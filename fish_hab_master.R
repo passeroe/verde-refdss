@@ -43,7 +43,7 @@ CheckSub <- "Yes"; if(CheckSub=="Yes"){
   subName <- "sub_dissolve"}
 
 # Yes or No. Choose whether or not to remove isolated (single cell) habitat patches
-RemoveIslands <- "No"; if(RemoveIslands=="Yes"){
+RemoveIslands <- "Yes"; if(RemoveIslands=="Yes"){
   islandSize <- 2} # number of raster cells that is considered too small of a habitat patch
 
 # Yes or No. Choose whether or not to normalize habitat area by reach length
@@ -59,7 +59,7 @@ FlowScenario <- "Yes"; if(FlowScenario=="Yes"){
     xDays <- 7} # number of days for moving discharge and area statistics
   
   # Yes or No. Yes - limit analysis to supplied dates. No - consider entire hydrograph.
-  DateRange <- "Yes"; if(DateRange=="Yes"){
+  DateRange <- "No"; if(DateRange=="Yes"){
     startDate <- "1993-10-01" # "YYYY-MM-DD"
     endDate <- "1994-03-30"} # "YYYY-MM-DD"
 } # End of flow scenario related options
@@ -116,7 +116,7 @@ outputs <- list()
 outputs <- lapply(specieslist, function(species){ # builds tables and maps for all species in list
   
   ## Reclassify Bricks with hydraulic and substrate HSC by lifestage
-  source("find.hsc.R"); source("bricks.rc.R"); source("by.substrate.R"); source("find.sub.R")
+  source("find.hsc.R"); source("bricks.rc.R"); source("by.substrate.R"); source("find.sub.R"); source("remove.islands.R")
   
   hsc_allspec<-fread(paste(wd,reachName,"_hsc",".csv",sep = ""), header=TRUE, sep=",",data.table = FALSE)
   hsc_allages <- find.hsc(hsc_allspec,species) # extract HSC for single species
@@ -131,9 +131,14 @@ outputs <- lapply(specieslist, function(species){ # builds tables and maps for a
     names(goodHabList) <- lifestages
     } # end of if statement
   
+  if(RemoveIslands == "Yes"){
+    goodHabList <- lapply(lifestages, function(a) remove.islands(a,goodHabList,RemoveIslands,islandSize))
+    names(goodHabList) <- lifestages
+  }
+  
   ## Total available habitat area by lifestage
   source("total.area.R")
-  areaLookTab <- lapply(lifestages, function(a) total.area(a,goodHabList,modeled_q,RemoveIslands,NormalizeByL,reachL,islandSize))
+  areaLookTab <- lapply(lifestages, function(a) total.area(a,goodHabList,modeled_q,NormalizeByL,reachL,habMets))
   names(areaLookTab) <- lifestages
   
   ## Order rasters of total available habitat by modeled discharge
@@ -168,13 +173,14 @@ outputs <- lapply(specieslist, function(species){ # builds tables and maps for a
     outputs$areaLookTab <- areaLookTab
     outputs$rastByQ <- rastByQ
     outputs$avgMonthlyArea <- avgMonthlyArea
-    return(outputs)
+    
     
   } else{ # outputs not including any flow-scenario related outputs
     # condense outputs into a single list
     outputs$areaLookTab <- areaLookTab
     outputs$rastByQ <- rastByQ
-    return(outputs)}
+  }
+  return(outputs)
   }) # end of species list function
 
 names(outputs) <- specieslist

@@ -21,5 +21,3 @@ bricks.rc <- function(a,outValRast,hsc_allages,habMets){
   } # end of for loop
   return(acceptRast) # Returns Brick of suitable cells by discharge
 } # end of function 
-
-
