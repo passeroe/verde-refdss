@@ -14,7 +14,7 @@ iric.process.smr: Rasterizes the results in list of CSVs using attributes of use
 
 load.cherry: Loads Cherry Creek raster files, stored in separate folders by hydraulic habitat variable, into the script. Will later be merged into load.external.R. Returns a rasterBrick of each habitat metric that contains the results for all modeled discharges.
 
-load.delaware. Loads raster files from the Delaware study. Results for hydraulic habitat variables are stored in the same folder and distinguished by their file naming pattern. Returns a rasterBrick of each habitat metric that contains the results for all modeled discharges.
+load.delaware: Loads raster files from the Delaware study. Results for hydraulic habitat variables are stored in the same folder and distinguished by their file naming pattern. Returns a rasterBrick of each habitat metric that contains the results for all modeled discharges.
 
 find.hsc: Selects habitat suitability criteria from reach_hsc.csv for the current species.
 
