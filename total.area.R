@@ -1,4 +1,3 @@
-# Function: Optionally removes islands (isolated, single cell habitat areas) from habitat area
 # Calculates total available habitat area by lifestage
 # Last edited by Elaina Passero on 06/04/19
 

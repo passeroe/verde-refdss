@@ -1,6 +1,6 @@
 # Function: Reclassifies rasterStacks with habitat suitability criteria. 
 # Outputs RasterBrick with layers of suitable cells by discharge
-# Last edited by Elaina Passero on 05/31/19
+# Last edited by Elaina Passero on 06/17/19 - reclassify changes
 
 
 ### Begin function ###
@@ -16,7 +16,7 @@ bricks.rc <- function(a,outValRast,hsc_allages,habMets){
       pMax <- max(hm) # set positions of min and max values for habitat metric
       sDepth <- c(-999,hsc[,pMin],NA, hsc[,pMin],hsc[,pMax],1, hsc[,pMax],999,NA)
       rcDMat <- matrix(sDepth, ncol=3, byrow=TRUE)
-      rcDrast <- reclassify(outValRast[[m]], rcDMat)
+      rcDrast <- reclassify(outValRast[[m]], rcDMat,right=FALSE)
       acceptRast <- acceptRast + rcDrast # any value + NA yields NA; cells either number of habitat metrics or NA
   } # end of for loop
   return(acceptRast) # Returns Brick of suitable cells by discharge

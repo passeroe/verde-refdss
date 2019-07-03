@@ -1,4 +1,4 @@
-# This function removes islands (isolated, single cell habitat areas) from habitat area
+# This function removes islands (isolated, small habitat areas) from habitat area calculation and maps
 # Last edited by Elaina Passero on 6/4/19
 
 remove.islands <- function(a,goodHabList,RemoveIslands,islandSize){

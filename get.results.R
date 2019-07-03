@@ -16,11 +16,6 @@ iric_results <- list.files(path=tempwd,pattern = ".csv") # working directory can
 holdList <- list()
 csvList <- list()
 
-# Create list of modeled Qs from iRIC
-#modeled_q <- c()
-#q_i <- sub("Result_","",sub(".csv","",iric_results))
-#modeled_q <- c(modeled_q,as.numeric(q_i))
-
 # Create list of modeled Qs from River2D
 modeled_q <- c()
 modeled_q <- parse_number(iric_results)

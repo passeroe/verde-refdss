@@ -20,12 +20,14 @@ wd <- "C:/Users/epassero/Desktop/VRDSS/verde-refdss/"
 setwd(wd)
 habMets <- list("depth","velocity") #Variables from iRIC calculation result used for habitat analysis ex: Velocity..magnitude.
 specieslist <- c("longfindace","yellowbullhead","desertsucker","sonoransucker","redshiner","roundtailchub","greensunfish","fatheadminnow","speckleddace")
-species <- specieslist
+species <- "longfindace"
 lifestages <- list("adult") #lifestages from oldest to youngest; must match order in HSC table
 reachName <- "Cherry_Braid" # Should match name of folder with results
 disunit <- "cfs" #units of discharge
 
 ## Secondary Inputs - Use only if switching between projects
+Check0Flow <- "No" # Yes- Calculate max area for 0-flow scenario and interpolate below min modeled Q
+
 # Yes- external rasters or No- rasterize iRIC results. Inputs required if No.
 LoadExternal <- "Yes"; if(LoadExternal=="No"){
   skipnum <- 1 # number of rows to skip when reading in CSV results
@@ -35,7 +37,10 @@ LoadExternal <- "Yes"; if(LoadExternal=="No"){
   # Does the resolution of the rasters need to be manually set? If No, DEM resolution will be used.
   setRes <- "No"; if(setRes=="Yes"){
     res <- c(0.25,0.25)} # resolution of rasters if they need to be manually set
-} # end of internal rasterization inputs
+  if(Check0Flow=="Yes"){ 
+    depth0Flow <- "insert depth raster layer" 
+  }# end of internal rasterization inputs;
+}
 
 ## Options - If set to No, inputs are not required for option
 # Yes or No. Choose whether or not to check substrate conditions as part of suitable habitat
@@ -62,6 +67,7 @@ FlowScenario <- "Yes"; if(FlowScenario=="Yes"){
   DateRange <- "No"; if(DateRange=="Yes"){
     startDate <- "1993-10-01" # "YYYY-MM-DD"
     endDate <- "1994-03-30"} # "YYYY-MM-DD"
+
 } # End of flow scenario related options
 
 ### Begin Processing ###
@@ -165,7 +171,7 @@ outputs <- lapply(specieslist, function(species){ # builds tables and maps for a
     }
     
     source("avg.month.area.R")
-    avgMonthlyArea <- lapply(lifestages, function(a) avg.month.area(a,interTab))
+    avgMonthlyArea <- lapply(lifestages, function(a) avg.month.area(a,interTab,NormalizeByL))
     names(avgMonthlyArea) <- lifestages
     # end of flow scenario dependent processes
     
@@ -211,3 +217,4 @@ plot_ly(plottable,x=~discharge) %>%
   add_lines(y=plottable[,10],name=names(plottable[10]),line=list(color='pink')) %>%
   layout(title="Habitat-discharge for Braided site w/ Substrate w/o LWD",xaxis=list(title="Discharge (cfs)"),yaxis=list(title="Normalized Area (m2/km)"))
   
+#writeRaster(outputs$greensunfish$rastByQ$adult,"gsf250.tif",format="GTiff")
