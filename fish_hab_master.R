@@ -4,7 +4,7 @@
 
 # Load required packages
 packages <- c("SDMTools","sp","raster","rgeos","rgdal","sf","spatstat","spdep","tidyverse","rasterVis",
-              "ggplot2","data.table","dplyr","plotly","spex","stars","igraph")
+              "ggplot2","data.table","dplyr","plotly","spex","stars","igraph","deldir","hydroTSM")
 #  Check to see if each is installed, and install if not.
 if (length(setdiff(packages, rownames(installed.packages()))) > 0) {    
   install.packages(setdiff(packages, rownames(installed.packages())))  
@@ -18,25 +18,25 @@ lapply(packages,library,character.only=TRUE)
 wd <- "C:/Users/epassero/Desktop/VRDSS/verde-refdss/"
 #wd <- "/Users/Morrison/Documents/Active Research Projects/Verde REFDSS/verde-refdss/" # Set path to local repository
 setwd(wd)
-habMets <- list("depth","velocity") #Variables from iRIC calculation result used for habitat analysis ex: Velocity..magnitude.
+habMets <- list("Depth","Velocity") #Variables from iRIC calculation result used for habitat analysis ex: Velocity..magnitude.
 specieslist <- c("longfindace","yellowbullhead","desertsucker","sonoransucker","redshiner","roundtailchub","greensunfish","fatheadminnow","speckleddace")
 species <- "longfindace"
 lifestages <- list("adult") #lifestages from oldest to youngest; must match order in HSC table
-reachName <- "Cherry_Braid" # Should match name of folder with results
-disunit <- "cfs" #units of discharge
+reachName <- "Beasley1" # Should match name of folder with results
+disunit <- "cms" #units of discharge
 
 ## Secondary Inputs - Use only if switching between projects
 Check0Flow <- "No" # Yes- Calculate max area for 0-flow scenario and interpolate below min modeled Q
 
 # Yes- external rasters or No- rasterize iRIC results. Inputs required if No.
-LoadExternal <- "Yes"; if(LoadExternal=="No"){
-  skipnum <- 1 # number of rows to skip when reading in CSV results
-  xLoc <- "x" # field name of X coordinate in CSVs
-  yLoc <- "y" # field name of y coordinate in CSVs
-  DEM <- "braidallpts_DEM.tif" # Name of DEM used in iRIC: VerdeBeasley1Elev.tif, smrf_DEM_v241.tif, braidallpts_DEM.tif.
+LoadExternal <- "No"; if(LoadExternal=="No"){
+  skipnum <- 2 # number of rows to skip when reading in CSV results
+  xLoc <- "X" # field name of X coordinate in CSVs
+  yLoc <- "Y" # field name of y coordinate in CSVs
+  DEM <- "VerdeBeasley1Elev.tif" # Name of DEM: VerdeBeasley1Elev.tif, smrf_DEM_v241.tif, braidallpts_DEM.tif, GilaMGnd.tif
   # Does the resolution of the rasters need to be manually set? If No, DEM resolution will be used.
   setRes <- "No"; if(setRes=="Yes"){
-    res <- c(0.25,0.25)} # resolution of rasters if they need to be manually set
+    res <- c(10,10)} # resolution of rasters if they need to be manually set
   if(Check0Flow=="Yes"){ 
     depth0Flow <- "insert depth raster layer" 
   }# end of internal rasterization inputs;
@@ -45,14 +45,14 @@ LoadExternal <- "Yes"; if(LoadExternal=="No"){
 ## Options - If set to No, inputs are not required for option
 # Yes or No. Choose whether or not to check substrate conditions as part of suitable habitat
 CheckSub <- "Yes"; if(CheckSub=="Yes"){
-  subName <- "sub_dissolve"}
+  subName <- "BeasleyUS_SedThiessenPoly1Dissolved"}
 
 # Yes or No. Choose whether or not to remove isolated (single cell) habitat patches
 RemoveIslands <- "Yes"; if(RemoveIslands=="Yes"){
   islandSize <- 2} # number of raster cells that is considered too small of a habitat patch
 
 # Yes or No. Choose whether or not to normalize habitat area by reach length
-NormalizeByL <- "Yes"; if(NormalizeByL=="Yes"){
+NormalizeByL <- "No"; if(NormalizeByL=="Yes"){
   reachL <- 0.61
   unitL <- "km"} # Reach length in km. If not normalizing set equal to 1.
 
@@ -114,7 +114,8 @@ if(FlowScenario == "Yes"){
 if(CheckSub == "Yes"){
   baseRast <- outValRast[[1]][[1]] # will be overwritten during rasterization - provides setup
   subMap <- readOGR(dsn=paste(wd,"results","/",reachName,sep = ""),layer=subName) # read in substrate shapefile
-  rastSubMap <- rasterize(subMap,baseRast,field=subMap@data$substrate,update=TRUE)
+  #rastSubMap <- rasterize(subMap,baseRast,field=subMap@data$substrate,update=TRUE)
+  rastSubMap <- rasterize(subMap,baseRast,field=subMap@data$ParticalSi,update=TRUE)
 }
 
 ##### Run for all species #####
@@ -201,7 +202,8 @@ names(tables) <- specieslist
 ## Generate plots of length-normalized area by discharge for all species
 plottable <- data.frame(tables[[1]]$adult$discharge)
 for(i in 1:length(tables)){
-  plottable[,i+1] <- tables[[i]]$adult$normalizedArea
+  #plottable[,i+1] <- tables[[i]]$adult$normalizedArea
+  plottable[,i+1] <- tables[[i]]$adult$totalArea
 }
 colnames(plottable) <- c("discharge",specieslist)
 
@@ -215,6 +217,6 @@ plot_ly(plottable,x=~discharge) %>%
   add_lines(y=plottable[,8],name=names(plottable[8]),line=list(color='green')) %>%
   add_lines(y=plottable[,9],name=names(plottable[9]),line=list(color='purple')) %>%
   add_lines(y=plottable[,10],name=names(plottable[10]),line=list(color='pink')) %>%
-  layout(title="Habitat-discharge for Braided site w/ Substrate w/o LWD",xaxis=list(title="Discharge (cfs)"),yaxis=list(title="Normalized Area (m2/km)"))
+  layout(title="Habitat-discharge for Braided site w/ Substrate w/o LWD",xaxis=list(title="Discharge (cfs)"),yaxis=list(title="Total Area m2"))
   
 #writeRaster(outputs$greensunfish$rastByQ$adult,"gsf250.tif",format="GTiff")
