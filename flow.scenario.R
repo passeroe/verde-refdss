@@ -1,14 +1,30 @@
 # This script will manipulate the hydrograph to produce flow scenarios.
 
-enforceMed <- "Yes"
+library(dataRetrieval)
+library(hydroTSM)
+library(xts)
 
-perRed <- 0.05 # percent flow reduction
+
+# Pull data directly from USGS gage
+##### Flow duration stuff
+mysite<-'08263500'
+parameterCd <- "00060"
+startDate <- "1990-10-01"
+endDate <- "2019-08-28"
+dailymean<-readNWISdv(mysite,parameterCd,startDate,endDate)
+hydrograph <- data.frame(date=dailymean$Date,discharge=dailymean$X_00060_00003) # generate hydrograph from USGS gage data
+
+
+enforceMed <- "Yes"
+perRed <- 0.20 # percent flow reduction
 medianQ <- 160 # median flow value - could use monthly or annual
 withdrawal <- 5
 
+### Using internal data ###
 # read in the hydrograph
 hydrograph <- na.omit(fread(paste(wd,reachName,"_hydrograph",".csv",sep=""),header=TRUE, sep = ",",data.table=FALSE))
 hydrograph$date <- as.Date(hydrograph$date, format="%m/%d/%Y")
+
 
 # fixed withdrawal
 if(enforceMed == "Yes"){
