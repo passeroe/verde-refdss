@@ -19,7 +19,7 @@ wd <- "C:/Users/epassero/Desktop/VRDSS/verde-refdss/"
 #wd <- "/Users/Morrison/Documents/Active Research Projects/Verde REFDSS/verde-refdss/" # Set path to local repository
 setwd(wd)
 habMets <- list("Depth","Velocity") #Variables from iRIC calculation result used for habitat analysis ex: Velocity..magnitude.
-specieslist <- c("longfindace","yellowbullhead","desertsucker","sonoransucker","redshiner","roundtailchub","greensunfish","fatheadminnow","speckleddace")
+specieslist <- c("longfindace") #,"yellowbullhead","desertsucker","sonoransucker","redshiner","roundtailchub","greensunfish","fatheadminnow","speckleddace")
 species <- "longfindace"
 lifestages <- list("adult") #lifestages from oldest to youngest; must match order in HSC table
 reachName <- "Beasley1" # Should match name of folder with results
@@ -199,7 +199,7 @@ tables <- lapply(specieslist, function(species){
 names(tables) <- specieslist
 
 
-## Generate plots of length-normalized area by discharge for all species
+## Generate plots of area by discharge for all species
 plottable <- data.frame(tables[[1]]$adult$discharge)
 for(i in 1:length(tables)){
   #plottable[,i+1] <- tables[[i]]$adult$normalizedArea
