@@ -3,6 +3,8 @@
 library(dataRetrieval)
 library(hydroTSM)
 library(xts)
+library(lubridate)
+library(lplyr)
 
 
 # Pull data directly from USGS gage
@@ -14,7 +16,6 @@ endDate <- "2019-08-28"
 dailymean<-readNWISdv(mysite,parameterCd,startDate,endDate)
 hydrograph <- data.frame(date=dailymean$Date,discharge=dailymean$X_00060_00003) # generate hydrograph from USGS gage data
 
-
 enforceMed <- "Yes"
 perRed <- 0.20 # percent flow reduction
 medianQ <- 160 # median flow value - could use monthly or annual
@@ -24,6 +25,21 @@ withdrawal <- 5
 # read in the hydrograph
 hydrograph <- na.omit(fread(paste(wd,reachName,"_hydrograph",".csv",sep=""),header=TRUE, sep = ",",data.table=FALSE))
 hydrograph$date <- as.Date(hydrograph$date, format="%m/%d/%Y")
+
+## Subset by Julian dates MM-DD
+hydroPeriodList <- list(c(
+  startP1= "04/30", # snowmelt
+  startP2 = "07/15", # monsoon
+  startP3 = "08/31" # dry
+  )) # end of date list
+
+
+startP1 <- "04/30"
+endP1 <- "07/15"
+dp1 <- as.Date(startP1,format="%m/%d")
+Date <- as.Date("2019-08-28")
+
+month(Date) >= month(dp1) && day(Date) > day(dp1) && month(Date) <= month(dp1) && day(Date) <= day(dp1)
 
 
 # fixed withdrawal
