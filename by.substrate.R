@@ -1,22 +1,22 @@
 # This script is used to get suitable habitat that meets substrate type requirements.
-# Last edited by Elaina Passero on 5/30/19
+# Last edited by Elaina Passero on 10/18/19
 
 ### Begin Function ###
-by.substrate <- function(a, goodHabList, sub_allages,rastSubMap){
+by.substrate <- function(a, good_hab_list, sub_allages,rast_sub_map){
   pos <- grep(a,names(sub_allages),ignore.case = TRUE)
-  subReq <- sub_allages[,pos] # substrate requirement for current lifestage
-  subReq <- as.numeric(subReq[!is.na(subReq)]) # remove any NA values
+  sub_req <- sub_allages[,pos] # substrate requirement for current lifestage
+  sub_req <- as.numeric(sub_req[!is.na(sub_req)]) # remove any NA values
   
-  subSeq <- seq(min(subReq),max(subReq)+1,by=1)
-  subRC <- data.frame(from=c(-999,subSeq),to=c(subSeq,999))
-  subRC$become <- ifelse(subRC$from %in% subReq,1,0)
-  rcl <- as.matrix.data.frame(subRC,ncol=3)
+  sub_seq <- seq(min(sub_req),max(sub_req)+1,by=1)
+  sub_rc <- data.frame(from=c(-Inf,sub_seq),to=c(sub_seq,Inf))
+  sub_rc$become <- ifelse(sub_rc$from %in% sub_req,1,0)
+  rcl <- as.matrix.data.frame(sub_rc,ncol=3)
   
-  goodRast <- goodHabList[[a]] # raster of suitable habitat for current lifestage
+  good_rast <- good_hab_list[[a]] # raster of suitable habitat for current lifestage
   
-  rcSubMap <- reclassify(rastSubMap,rcl,right=FALSE) # reclassify substrate map based on substrate criteria
+  rc_sub_map <- reclassify(rast_sub_map,rcl,right=FALSE) # reclassify substrate map based on substrate criteria
   
   # Mask
-  bySubBrick <- mask(goodRast,rcSubMap,inverse=TRUE,maskvalue=1,updatevalue=NA) # if cells not covered by acceptable substrate or are NA, they are set to NA
-  return(bySubBrick)
+  by_sub_brick <- mask(good_rast,rc_sub_map,inverse=TRUE,maskvalue=1,updatevalue=NA) # if cells not covered by acceptable substrate or are NA, they are set to NA
+  return(by_sub_brick)
 }

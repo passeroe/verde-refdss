@@ -1,5 +1,0 @@
-,depthmin,depthmax,velocitymin,velocitymax
-adult_browntrout,0.3,100,0,1
-juvenile_browntrout,0.2,0.8,0,0.7
-spawning_browntrout,0.2,0.6,0.3,0.81
-incubation_browntrout,0.2,1,0.15,1.2

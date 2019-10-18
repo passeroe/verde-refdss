@@ -1,32 +1,32 @@
 # This function will read in Cherry Creek raster files for hydraulic habitat variables
-# Last edited by Elaina Passero on 6/14/19
+# Last edited by Elaina Passero on 10/18/19
 
-load.cherry <- function(wd,reachName,reachCode,Check0Flow){
+load.cherry <- function(wd,reach_name,Check0Flow){
   
-  tempwd <-paste(wd,"results","/",reachName,"/",sep = "") # Rasters must be in their own folder
+  tempwd <-paste(wd,"results","/",reach_name,"/",sep = "") # Rasters must be in their own folder
   setwd(tempwd)
   
-  depthRast <- as.list(list.files(path=paste(tempwd,"depth","/",sep=""),pattern = "m.tif")) # pull depth rasters
-  velRast <- as.list(list.files(path=paste(tempwd,"velocity","/",sep=""),pattern = "m.tif")) # pull velocity rasters
+  depth_rast <- as.list(list.files(path=paste(tempwd,"depth","/",sep=""),pattern = "m.tif")) # pull depth rasters
+  vel_rast <- as.list(list.files(path=paste(tempwd,"velocity","/",sep=""),pattern = "m.tif")) # pull velocity rasters
   
   # get modeled discharges
-  modeled_q <- unlist(lapply(depthRast, parse_number))
+  modeled_q <- unlist(lapply(depth_rast, parse_number))
   
   # load rasters
-  depthRast <- brick(lapply(depthRast,function(b) raster(x=paste(tempwd,"depth","/",b,sep=""))))
-  #if(Check0Flow=="Yes"){
-   # pos0 <- as.numeric(match(0,modeled_q)) # gets the position of the zero flow depth raster
-  #  vel0Rast <- depthRast[[pos0]]*0 # creates raster of wet cells set to zero velocity
-   # writeRaster(vel0Rast,filename=paste(tempwd,"velocity","/",))
-   # append(velRast,vel0Rast,after=(pos0-1))
- # }
-  velRast <- brick(lapply(velRast,function(b) raster(x=paste(tempwd,"velocity","/",b,sep=""))))
+  depth_rast <- brick(lapply(depth_rast,function(b) raster(x=paste(tempwd,"depth","/",b,sep=""))))
+  if(Check0Flow=="Yes"){
+    pos0 <- as.numeric(match(0,modeled_q)) # gets the position of the zero flow depth raster
+    vel_0_rast <- depth_rast[[pos0]]*0 # creates raster of wet cells set to zero velocity
+    writeRaster(vel_0_rast,filename=paste(tempwd,"velocity","/","v_cfs_0m",sep=""),format="GTiff",overwrite=TRUE)
+    append(vel_rast,vel_0_rast,after=(pos0-1))
+  }
+  vel_rast <- brick(lapply(vel_rast,function(b) raster(x=paste(tempwd,"velocity","/",b,sep=""))))
   
-  holdList <- list()
-  holdList$depthRast <- depthRast
-  holdList$velRast <- velRast
-  holdList$modeled_q <- modeled_q
+  temp_list <- list()
+  temp_list$depth_rast <- depth_rast
+  temp_list$vel_rast <- vel_rast
+  temp_list$modeled_q <- modeled_q
   # reset working directory
   setwd(wd)
-  return(holdList)
+  return(temp_list)
 } # end of function

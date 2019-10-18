@@ -1,27 +1,27 @@
 # Adapted from IRIC_processing_v1 by Julian Scott 01/30/19
 # Function: Processes iRIC output by discharge and variable. Returns list of rasters. 
-# Last edited by Elaina Passero on 04/26/19
+# Last edited by Elaina Passero on 10/18/19
 
-iric.process.smr <- function(m,csvList,wd,DEM,reachName,setRes,xLoc,yLoc) {
+iric.process.smr <- function(m,csv_list,wd,dem,reach_name,setRes,x_loc,y_loc) {
   # read in elevation surface from the working directory
-  SMR_elev <- raster(paste(wd,"results","/",reachName,"/",DEM,sep = ""))
+  smr_elev <- raster(paste(wd,"results","/",reach_name,"/",dem,sep = ""))
   # create an empty raster with the extent, resolution, and projection of the DEM.
-  e <- extent(SMR_elev)
+  e <- extent(smr_elev)
   if(setRes == "No"){
-    res <- res(SMR_elev)
+    res <- res(smr_elev)
   }
-  setCRS <- crs(SMR_elev)
+  setCRS <- crs(smr_elev)
   r <- raster(x = e,resolution = res,crs = setCRS)
   
   # Transfer values from iric output i to the cells of raster r, but only when the cell is inundated (!= 0)
   # If multiple points from the iric output are within a cell of r, the mean points is used for the cell value.
-  depth <- grep("depth",names(csvList[[1]]),ignore.case = TRUE,value = TRUE)
-  SMR_Q_S <- stack(lapply(csvList,function(i) rasterize(x = i[,c(xLoc,yLoc)],y = r, field = ifelse(i[,depth] == 0,NA,i[,m]),fun = mean)))
-  proj4string(SMR_Q_S) <- setCRS
+  depth <- grep("depth",names(csv_list[[1]]),ignore.case = TRUE,value = TRUE)
+  smr_q_s <- stack(lapply(csv_list,function(i) rasterize(x = i[,c(x_loc,y_loc)],y = r, field = ifelse(i[,depth] == 0,NA,i[,m]),fun = mean)))
+  proj4string(smr_q_s) <- setCRS
   # Resample raster i using bilinear interpolation to fill in those cells in r_i that did not have a cell value due to no point overlap
-  SMR_Q_S <- raster::projectRaster(from=SMR_Q_S,to=SMR_elev,method = 'bilinear')
+  smr_q_s <- raster::projectRaster(from=smr_q_s,to=smr_elev,method = 'bilinear')
   # Returns Brick of rasters
-  return(SMR_Q_S)
+  return(smr_q_s)
 } # end function
 
 
