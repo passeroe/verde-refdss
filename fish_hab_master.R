@@ -1,6 +1,6 @@
 # Function: This script serves as the master script that controls which functions are run and what inputs are used for finding suitable fish habitat
 #         It will later be converted to the script that controls the Shiny App.
-# Last edited by Elaina Passero on 10/17/19
+# Last edited by Elaina Passero on 10/21/19
 
 # Load required packages
 packages <- c("SDMTools","sp","raster","rgeos","rgdal","sf","spatstat","spdep","tidyverse","rasterVis",
@@ -19,7 +19,7 @@ wd <- "C:/Users/epassero/Desktop/VRDSS/verde-refdss/"
 #wd <- "/Users/Morrison/Documents/Active Research Projects/Verde REFDSS/verde-refdss/" # Set path to local repository
 setwd(wd)
 hab_mets <- list("depth","velocity") #Variables from iRIC calculation result used for habitat analysis
-species_list <- c("longfindace","yellowbullhead","desertsucker","sonoransucker","redshiner","roundtailchub","greensunfish","fatheadminnow","speckleddace")
+species_list <- c("longfindace","yellowbullhead")#"desertsucker","sonoransucker","redshiner","roundtailchub","greensunfish","fatheadminnow","speckleddace")
 species <- "longfindace"
 lifestages <- list("adult") #lifestages from oldest to youngest; must match order in HSC table
 reach_name <- "Cherry_Braid" # Should match name of folder with results
@@ -144,7 +144,7 @@ outputs <- lapply(species_list, function(species){ # builds tables and maps for 
   names(area_look_tab) <- lifestages
   
   ## Order rasters of total available habitat by modeled discharge
-  source("rast.by.q.R")
+  source("order.by.q.R")
   rast_by_q <- lapply(lifestages, function(a) order.by.q(a,good_hab_list,modeled_q))
   names(rast_by_q) <- lifestages
   
@@ -153,11 +153,6 @@ outputs <- lapply(species_list, function(species){ # builds tables and maps for 
     source("interp.table.R")
     inter_tab <- lapply(lifestages, function(a) interp.table(a,hydrograph,area_look_tab,NormalizeByL))
     names(inter_tab) <- lifestages
-    
-    ## Generate and view plots of total area through the hydrograph
-    #source("interp.plot.R")
-    #interPlots <- lapply(lifestages, function(a) interp.plot(a,inter_tab,NormalizeByL))
-    #head(interPlots)
     
     ## Generate Data Frames of moving X-Day area and discharge statistics
     if(CalcXDayStats=="Yes"){
@@ -175,6 +170,7 @@ outputs <- lapply(species_list, function(species){ # builds tables and maps for 
     outputs$area_look_tab <- area_look_tab
     outputs$rast_by_q <- rast_by_q
     outputs$avg_monthly_area <- avg_monthly_area
+    outputs$inter_tab <- inter_tab
     
     
   } else{ # outputs not including any flow-scenario related outputs
@@ -217,3 +213,10 @@ plot_ly(plottable,x=~discharge) %>%
 # writeRaster(outputs$speckleddace$rast_by_q$adult$`10000`,"sd10000.tif",format="GTiff")
 # write.csv(plottable,file="Cherry_Braid_lookup.csv")
 # writeRaster(sub_map_rast,"sub_map_rast.tif",format="GTiff")
+
+## Generate and view plots of total area through the hydrograph
+#source("interp.plot.R")
+#interPlots <- lapply(lifestages, function(a) interp.plot(a,inter_tab,NormalizeByL))
+#head(interPlots)
+
+

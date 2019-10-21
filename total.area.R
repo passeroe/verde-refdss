@@ -8,11 +8,10 @@ accept_val <- length(hab_mets) # the value of the acceptable cells
 sum_cells <- cellStats(b,stat='sum',na.rm=TRUE)/accept_val # divide by the accept_val to get the total number of acceptable cells
 cell_size <- xres(b)^2
 tot_area <- cell_size*sum_cells
-area_look_tab <- list() 
-area_look_tab$discharge <- modeled_q
-area_look_tab$total_area <- tot_area
-area_look_tab <- as.data.frame(area_look_tab)
-area_look_tab <- arrange(area_look_tab,discharge) # puts table in ascending order
+
+area_look_tab <- data.frame(discharge = modeled_q,
+                            total_area = tot_area) %>%
+  dplyr::arrange(discharge)
 if(NormalizeByL == "Yes"){
   area_look_tab$normalized_area <- area_look_tab$total_area/reach_length # normalize area by reach length
 }

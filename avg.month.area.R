@@ -1,7 +1,7 @@
 # This function calculates monthly area using central 10-day lowest consecutive area values
 # Returns a data frame with average monthly area
 # should update to run without normalizing area
-# Last edited by Elaina Passero on 10/18/19
+# Last edited by Elaina Passero on 10/21/19
 
 avg.month.area <- function(a,inter_tab,NormalizeByL){
   # Monthly stats using lowest consecutive 10 days
@@ -19,8 +19,8 @@ avg.month.area <- function(a,inter_tab,NormalizeByL){
   }
   move_df$day <- as.numeric(format(as.Date(move_df$date,format="%m/%d/%Y"),"%d"))
   low10df <- filter(move_df, is.na(move_df$low10d_avg_area)==FALSE)
-  tbl_tab <- tbl_df(low10df)
-  runMonth <- group_by(tbl_tab,year(date)) %>%
+  runMonth <- as_tibble(low10df) %>%
+    group_by(year(date)) %>%
     group_by(month(date),add=TRUE) %>%
     summarise(mon_avg_low_area=min(low10d_avg_area))
   return(runMonth)
