@@ -1,0 +1,27 @@
+# Adapted from IRIC_processing_v1 by Julian Scott 01/30/19
+# Function: Processes iRIC output by discharge and variable. Returns list of rasters. 
+# Last edited by Elaina Passero on 10/18/19
+
+iric.process.smr <- function(m,delim_list,reach_wd,dem,setRes,x_loc,y_loc) {
+  # read in elevation surface from the working directory
+  smr_elev <- raster(paste(reach_wd,dem,sep = ""))
+  # create an empty raster with the extent, resolution, and projection of the DEM.
+  e <- extent(smr_elev)
+  if(setRes == "No"){
+    res <- res(smr_elev)
+  }
+  setCRS <- crs(smr_elev)
+  r <- raster(x = e,resolution = res,crs = setCRS)
+  
+  # Transfer values from iric output i to the cells of raster r, but only when the cell is inundated (!= 0)
+  # If multiple points from the iric output are within a cell of r, the mean points is used for the cell value.
+  depth <- grep("depth",names(delim_list[[1]]),ignore.case = TRUE,value = TRUE)
+  smr_q_s <- stack(lapply(delim_list,function(i) rasterize(x = i[,c(x_loc,y_loc)],y = r, field = ifelse(i[,depth] == 0,NA,i[,m]),fun = mean)))
+  proj4string(smr_q_s) <- setCRS
+  # Resample raster i using bilinear interpolation to fill in those cells in r_i that did not have a cell value due to no point overlap
+  smr_q_s <- raster::projectRaster(from=smr_q_s,to=smr_elev,method = 'bilinear')
+  # Returns Brick of rasters
+  return(smr_q_s)
+} # end function
+
+

@@ -1,0 +1,4 @@
+,depthmin,depthmax,velocitymin,velocitymax
+adult_fakefish,0.5,1,0.1,0.4
+juvenile_fakefish,0.3,0.7,0.1,0.3
+adult_notfish,0,1,0,1

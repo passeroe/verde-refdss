@@ -1,10 +1,9 @@
 # This function will read in Cherry Creek raster files for hydraulic habitat variables
-# Last edited by Elaina Passero on 10/18/19
+# Last edited by Elaina Passero on 10/21/19
 
-load.cherry <- function(wd,reach_name,Check0Flow){
+load.cherry <- function(reach_wd,Check0Flow){
   
-  tempwd <-paste(wd,"results","/",reach_name,"/",sep = "") # Rasters must be in their own folder
-  setwd(tempwd)
+  tempwd <-paste(reach_wd,"model_outputs","/",sep = "") # Rasters must be in their own folder
   
   depth_rast <- as.list(list.files(path=paste(tempwd,"depth","/",sep=""),pattern = "m.tif")) # pull depth rasters
   vel_rast <- as.list(list.files(path=paste(tempwd,"velocity","/",sep=""),pattern = "m.tif")) # pull velocity rasters
@@ -26,7 +25,6 @@ load.cherry <- function(wd,reach_name,Check0Flow){
   temp_list$depth_rast <- depth_rast
   temp_list$vel_rast <- vel_rast
   temp_list$modeled_q <- modeled_q
-  # reset working directory
-  setwd(wd)
+
   return(temp_list)
 } # end of function
