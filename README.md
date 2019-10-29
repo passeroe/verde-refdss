@@ -14,11 +14,11 @@ Fish_hab_master: Serves as the master script that handles user inputs and calls 
 
 get.results: Pulls in iRIC output results as CSVs and fixes headers containing special characters. Returns a list of CSVs and a list of the modeled discharges.
 
+get.gila: Reads in SR2DH text file outputs for rasterization. Adds headers and extracts modeled discharges.
+
 iric.process.smr: Rasterizes the results in list of CSVs using attributes of user supplied DEM. Returns a rasterBrick of each habitat metric that contains the results for all modeled discharges.
 
 load.cherry: Loads Cherry Creek raster files, stored in separate folders by hydraulic habitat variable, into the script. Will later be merged into load.external.R. Returns a rasterBrick of each habitat metric that contains the results for all modeled discharges.
-
-load.delaware: Loads raster files from the Delaware study. Results for hydraulic habitat variables are stored in the same folder and distinguished by their file naming pattern. Returns a rasterBrick of each habitat metric that contains the results for all modeled discharges.
 
 find.hsc: Selects habitat suitability criteria from reach_hsc.csv for the current species.
 
@@ -30,17 +30,24 @@ by.substrate: Takes a rasterized substrate type map of the same extent, resoluti
 
 remove.islands: Removes islands (small, isolated habitat areas) from suitable habitat area. The number of cells that constitutes an island can be specified.
 
-total.area: Calculates total available and, optionally, reach-normalized habitat area by lifestage for the area-discharge reference tables.
+total.area: Calculates total available and, optionally, reach-normalized habitat area by lifestage for the area-discharge reference tables. This function will also export the habitat area-discharge lookup tables to the dss_outputs folder if that option has been specified.
 
-rast.by.q: Puts rasters of total available habitat in order of ascending modeled Q for easy extraction.
+order.by.q: Puts rasters of total available habitat in order of ascending modeled Q for easy extraction. This function will also export the rasters to the dss_outputs folder if that option has been specified.
 
 interp.table: Adds total available and normalized area (if applicable) to the hydrograph table. It will linearly interpolate between discharges to fill in areas for any discharges not run in iRIC. This function is not capable of extrapolation.
-
-interp.plot: Generates plots of total available and normalized area (if applicable) with the user supplied hydrograph.
 
 avg.monthly.area: Calculates the minimum average monthly area using a central running 10-day mean. 
 
 x.day.stats: Calculates moving X-day minimum, maximum, and mean discharges and total area for a hydrograph.
+
+q.ep.weibull: Calculates exceedance probability (EP) for discharges in flow scenario and modeled discharges. Exceedance probability is calculated from the Weibull plotting position.
+
+make.ep.maps: Generates map of inundating discharges by cell and reclassifies that map to give the EP for each cell based on the flow scenario.
+
+#### Functions in Development
+make.flow.scenario: Generates flow scenarios from the historic flow record. The historic flow record can be read from a USGS gage or CSV. Currently, flow scenarios can be percent reduction in flow or a fixed withdrawal.
+
+interp.plot: Generates plots of total available and normalized area (if applicable) with the user supplied flow scenario.
 
 ## Descriptions of File Structure
 Each reach should have its own folder with a unique reach name. This name should not contain any spaces. Within the reach folder there should be four sub-folders: model_outputs, habitat_info, dss_outputs, and flow_scenarios. The .RData files and substrate shapefile should be stored in the main reach folder.
