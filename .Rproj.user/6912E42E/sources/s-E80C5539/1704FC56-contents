@@ -1,5 +1,5 @@
 # This function generates flow scenarios from historic flow record
-# Last edited by Elaina Passero on 10/24/19
+# Last edited by Elaina Passero on 10/29/19
 
 library(dataRetrieval)
 library(nlstools)
@@ -21,7 +21,7 @@ hydrograph <- na.omit(fread(paste(reach_wd,"flow_scenarios","/",reach_name,"_hyd
                             header=TRUE, sep = ",",data.table=FALSE))
 hydrograph$date <- as.Date(hydrograph$date, format="%m/%d/%Y")
 
-flow.scenario <- function(hydrograph,enforce_med,median_q,withdrawal,per_red){
+make.flow.scenario <- function(hydrograph,enforce_med,median_q,withdrawal,per_red){
   if(withdrawal > 0){ # fixed withdrawal
     if(enforce_med == "Yes"){
       for(r in 1:length(hydrograph$date)){

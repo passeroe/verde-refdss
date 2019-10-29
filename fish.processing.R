@@ -1,5 +1,5 @@
-# This script will house the processing options and functionality
-# This script will produce area-lookup tables by species
+# This script will house the fish processing options and functionality
+# This script will produce area-lookup tables by species for fish
 # Last edited by Elaina Passero on 10/28/19
 
 # Load required packages

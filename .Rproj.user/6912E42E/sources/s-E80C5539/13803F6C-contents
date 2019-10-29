@@ -1,8 +1,6 @@
 # this function will calculate EP for flows in flow scenario and those above it
 # If flows above the range of the flow scenario are input, EP will be calculated from Weibull plotting position assuming 1 event per Q
-# Last edited by Elaina Passero 10/28/19
-
-# *Right now extra discharges are generated, but the option to manually set them will be added later
+# Last edited by Elaina Passero 10/29/19
 
 q.ep.weibull <- function(hydrograph, modeled_q){
   
@@ -20,9 +18,25 @@ q.ep.weibull <- function(hydrograph, modeled_q){
   
   hydro_ep <- data.frame(approx(x=hydro_ep$discharge,y=hydro_ep$EP,method="linear",xout=hydro_ep$discharge)) %>%
     dplyr::rename(discharge = x, EP = y)
-  if(min(hydro_ep$discharge) == 0){
+ 
+  # sets EP for 0 to 1 if 0 was included in the analysis
+   if(min(hydro_ep$discharge) == 0){
     hydro_ep[1,2] <- 1
-  } # sets EP for 0 to 1 if 0 was included in the analysis
+  } 
+  
+  # Calculalte EP for flows larger than flow scenario. Assuming 1 event per flow.
+  if(any(modeled_q < min(hydrograph$discharge))){
+    df_m_q_smaller <- data.frame(discharge=modeled_q) %>%
+      filter(discharge < min(hydrograph$discharge)) %>% # modeled discharges below range of flow scenario
+      mutate(EP = 1) # sets EP 
+    
+    hydro_ep <- hydro_ep %>%
+      filter(discharge > min(hydrograph$discharge)) %>%
+      bind_rows(df_m_q_smaller) %>% # join extra flows and their EP values to flow scenario
+      dplyr::arrange(discharge) 
+  
+  }
+  
   
   # Calculalte EP for flows larger than flow scenario. Assuming 1 event per flow.
   if(isTRUE(modeled_q > max(hydrograph$discharge))){

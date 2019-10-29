@@ -1,5 +1,5 @@
 # This script will house the post-processing options and functionality
-# Last edited by Elaina Passero on 10/28/19
+# Last edited by Elaina Passero on 10/29/19
 
 # Load required packages
 packages <- c("SDMTools","sp","raster","rgeos","rgdal","sf","spatstat","spdep","tidyverse","rasterVis",
@@ -103,6 +103,3 @@ hydro_ep <- q.ep.weibull(hydrograph,modeled_q)
 
 source("make.ep.maps.R")
 ep_map <- make.ep.maps(hydro_ep,out_val_rast,modeled_q)
-
-
-
