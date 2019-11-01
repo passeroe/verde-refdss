@@ -1,0 +1,24 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1572621865872.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "723704204",
+    "id" : "A816712C",
+    "lastKnownWriteTime" : 1572628390,
+    "last_content_update" : 1572628390005,
+    "path" : "C:/Users/epassero/Desktop/VRDSS/verde-refdss/hydroperiods.R",
+    "project_path" : "hydroperiods.R",
+    "properties" : {
+        "cursorPosition" : "26,9",
+        "scrollLine" : "0",
+        "source_window_id" : "",
+        "tempName" : "Untitled2"
+    },
+    "relative_order" : 13,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

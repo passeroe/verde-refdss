@@ -24,4 +24,9 @@ interp.plot <- function(a,inter_tab,NormalizeByL){
   return(plotlist)
 }
 
+# need to remove the NA values before plotting or else I cannot use two different axes
+
+pt <- ggplot(i_t)+
+  geom_bar(aes(x=i_t$date,y=i_t$total_area),stat="identity",colour="blue")+
+  geom_line(aes(x=i_t$date, y=i_t$discharge),colour="red")
 

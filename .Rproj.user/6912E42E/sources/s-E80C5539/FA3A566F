@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1572458972497.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "FA3A566F",
+    "lastKnownWriteTime" : 31244220638101619,
+    "last_content_update" : 1572458972497,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "BE92CA12",
+        "caption" : "flow.scene1",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=flow.scene1&cache_key=BE92CA12",
+        "displayedObservations" : 10957,
+        "environment" : "",
+        "object" : "flow.scene1",
+        "preview" : 0,
+        "totalObservations" : 10957,
+        "variables" : 2
+    },
+    "relative_order" : 8,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

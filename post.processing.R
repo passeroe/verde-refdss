@@ -3,7 +3,8 @@
 
 # Load required packages
 packages <- c("SDMTools","sp","raster","rgeos","rgdal","sf","spatstat","spdep","tidyverse","rasterVis",
-              "ggplot2","data.table","dplyr","plotly","spex","stars","igraph","deldir","hydroTSM")
+              "ggplot2","data.table","dplyr","plotly","spex","stars","igraph","deldir","hydroTSM",
+              "lubridate")
 #  Check to see if each is installed, and install if not.
 if (length(setdiff(packages, rownames(installed.packages()))) > 0) {    
   install.packages(setdiff(packages, rownames(installed.packages())))  
@@ -17,7 +18,7 @@ wd <- "C:/Users/epassero/Desktop/VRDSS/verde-refdss/" # Project working director
 #wd <- "/Users/Morrison/Documents/Active Research Projects/Verde REFDSS/verde-refdss/" # Set path to local repository
 setwd(wd)
 
-species_list <- list("longfindace","yellowbullhead")#"desertsucker","sonoransucker","redshiner","roundtailchub","greensunfish","fatheadminnow","speckleddace")
+species_list <- list("longfindace","yellowbullhead","desertsucker","sonoransucker","redshiner","roundtailchub","greensunfish","fatheadminnow","speckleddace")
 #species <- "longfindace"
 lifestages <- list("adult") #lifestages from oldest to youngest; must match order in HSC table
 reach_name <- "USBeasley1" # Should match name of folder with results
@@ -103,3 +104,5 @@ hydro_ep <- q.ep.weibull(hydrograph,modeled_q)
 
 source("make.ep.maps.R")
 ep_map <- make.ep.maps(hydro_ep,out_val_rast,modeled_q)
+
+

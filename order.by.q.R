@@ -1,6 +1,6 @@
 # Function: Puts rasters of total available habitat in order of ascending modeled Q's
 # Returns a list of rasters
-# Last edited by Elaina Passero on 10/28/19
+# Last edited by Elaina Passero on 10/31/19
 
 order.by.q <- function(a,good_hab_list,modeled_q,ExportRast,reach_wd,fish){
   if(nlayers(good_hab_list[[a]])==0){
@@ -18,7 +18,7 @@ order.by.q <- function(a,good_hab_list,modeled_q,ExportRast,reach_wd,fish){
     if(ExportRast == "Yes"){
       writeRaster(open_brick[[n]],
                   filename = paste(reach_wd, "dss_outputs/", fish, "_", sort_q[i], "_", a, "_", "hab.tif", sep = ""), 
-                  format = "GTiff")
+                  format = "GTiff",overwrite=TRUE)
     }
   } # end of for loop
   names(rast_by_q) <- sort_q # names rasters in list by modeled Q

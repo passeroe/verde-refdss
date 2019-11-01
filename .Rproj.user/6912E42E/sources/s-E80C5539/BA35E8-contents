@@ -19,7 +19,7 @@ wd <- "C:/Users/epassero/Desktop/VRDSS/verde-refdss/" # Project working director
 #wd <- "/Users/Morrison/Documents/Active Research Projects/Verde REFDSS/verde-refdss/" # Set path to local repository
 setwd(wd)
 hab_mets <- list("Depth","Velocity") #Variables from iRIC calculation result used for habitat analysis - case sensitive
-species_list <- list("longfindace","yellowbullhead")#"desertsucker","sonoransucker","redshiner","roundtailchub","greensunfish","fatheadminnow","speckleddace")
+species_list <- c("longfindace","yellowbullhead","desertsucker","sonoransucker","redshiner","roundtailchub","greensunfish","fatheadminnow","speckleddace")
 #species <- "longfindace"
 lifestages <- list("adult") #lifestages from oldest to youngest; must match order in HSC table
 reach_name <- "USBeasley1" # Should match name of folder with results
@@ -126,22 +126,22 @@ names(tables) <- species_list
 ## Generate plots of area by discharge for all species
 plottable <- data.frame(tables[[1]]$adult$discharge)
 for(i in 1:length(tables)){
-  plottable[,i+1] <- tables[[i]]$adult$normalized_area
-  #plottable[,i+1] <- tables[[i]]$adult$total_area
+  #plottable[,i+1] <- tables[[i]]$adult$normalized_area
+  plottable[,i+1] <- tables[[i]]$adult$total_area
 }
 colnames(plottable) <- c("discharge",species_list)
 
 plot_ly(plottable,x=~discharge) %>%
   add_lines(y=plottable[,2],name=names(plottable[2]),line=list(color='black')) %>%
   add_lines(y=plottable[,3],name=names(plottable[3]),line=list(color='orange')) %>%
-  # add_lines(y=plottable[,4],name=names(plottable[4]),line=list(color='teal')) %>%
-  # add_lines(y=plottable[,5],name=names(plottable[5]),line=list(color='blue')) %>%
-  # add_lines(y=plottable[,6],name=names(plottable[6]),line=list(color='red')) %>%
-  # add_lines(y=plottable[,7],name=names(plottable[7]),line=list(color='yellow')) %>%
-  # add_lines(y=plottable[,8],name=names(plottable[8]),line=list(color='green')) %>%
-  # add_lines(y=plottable[,9],name=names(plottable[9]),line=list(color='purple')) %>%
-  # add_lines(y=plottable[,10],name=names(plottable[10]),line=list(color='pink')) %>%
-  layout(title="Habitat-discharge for Braided site w/ Substrate w/o LWD",xaxis=list(title="Discharge (cfs)"),yaxis=list(title="Normalized Habitat Area m2/km"))
+   add_lines(y=plottable[,4],name=names(plottable[4]),line=list(color='teal')) %>%
+   add_lines(y=plottable[,5],name=names(plottable[5]),line=list(color='blue')) %>%
+   add_lines(y=plottable[,6],name=names(plottable[6]),line=list(color='red')) %>%
+   add_lines(y=plottable[,7],name=names(plottable[7]),line=list(color='yellow')) %>%
+   add_lines(y=plottable[,8],name=names(plottable[8]),line=list(color='green')) %>%
+   add_lines(y=plottable[,9],name=names(plottable[9]),line=list(color='purple')) %>%
+   add_lines(y=plottable[,10],name=names(plottable[10]),line=list(color='pink')) %>%
+  layout(title="Habitat-discharge for US Beasley w/ Substrate",xaxis=list(title="Discharge (cfs)"),yaxis=list(title="Total Habitat Area m2"))
 
 
 

@@ -12,11 +12,11 @@
     "path" : "C:/Users/epassero/Desktop/VRDSS/verde-refdss/make.ep.maps.R",
     "project_path" : "make.ep.maps.R",
     "properties" : {
-        "cursorPosition" : "33,16",
+        "cursorPosition" : "40,0",
         "scrollLine" : "2",
         "tempName" : "Untitled1"
     },
-    "relative_order" : 8,
+    "relative_order" : 7,
     "source_on_save" : false,
     "source_window" : "",
     "type" : "r_source"
