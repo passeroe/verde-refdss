@@ -44,6 +44,10 @@ q.ep.weibull: Calculates exceedance probability (EP) for discharges in flow scen
 
 make.ep.maps: Generates map of inundating discharges by cell and reclassifies that map to give the EP for each cell based on the flow scenario.
 
+add_hydrograph: Adds the hydroperiod for each date in the hydrograph.
+
+alter.hydrograph: Applies flow alterations to the historic flow record by hydroperiod so a flow scenario can be built.
+
 #### Functions in Development
 make.flow.scenario: Generates flow scenarios from the historic flow record. The historic flow record can be read from a USGS gage or CSV. Currently, flow scenarios can be percent reduction in flow or a fixed withdrawal.
 
