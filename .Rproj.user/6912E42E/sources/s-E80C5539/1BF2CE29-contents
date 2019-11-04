@@ -4,7 +4,7 @@
 # Load required packages
 packages <- c("SDMTools","sp","raster","rgeos","rgdal","sf","spatstat","spdep","tidyverse","rasterVis",
               "ggplot2","data.table","dplyr","plotly","spex","stars","igraph","deldir","hydroTSM",
-              "lubridate")
+              "lubridate","rlist")
 #  Check to see if each is installed, and install if not.
 if (length(setdiff(packages, rownames(installed.packages()))) > 0) {    
   install.packages(setdiff(packages, rownames(installed.packages())))  
