@@ -1,0 +1,37 @@
+# This function will plot habitat area-discharge curves
+# Last edited by Elaina Passero on 11/13/19
+
+plot.a.q.curve <- function(fish_outputs,species_list,a,NormalizeByL){
+  
+  # Gather area-lookup tables for lifestage
+  tables <- lapply(species_list, function(species){
+    fish_outputs[[species]]$area_look_tab[[a]]
+  })
+  names(tables) <- species_list
+  
+  all_a_tab <- bind_rows(tables,.id = "species")
+  
+  if(NormalizeByL == "No"){
+    plt <- ggplot(big_tab)+
+      geom_line(aes(x=discharge,y=total_area,linetype=species,color=species),size=1)+
+      theme_gray()+
+      theme(text=element_text(size=14,face = "bold"),
+            panel.border = element_rect(fill = NA,size=1),
+            legend.position = c(0.99,0.99),legend.justification = c("right","top"),
+            axis.text.x = element_text(colour = "black",face="plain"),
+            axis.text.y = element_text(colour = "black",face="plain"))+
+      labs(y=bquote('Total Habitat Area in '~m^2),x=bquote("Discharge in "~m^3/s))
+  } else{
+    plt <- ggplot(big_tab)+
+      geom_line(aes(x=discharge,y=normalized_area,linetype=species),size=1)+
+      theme_gray()+
+      theme(text=element_text(size=14,face = "bold"),
+            panel.border = element_rect(fill = NA,size=1),
+            legend.position = c(0.99,0.99),legend.justification = c("right","top"),
+            axis.text.x = element_text(colour = "black",face="plain"),
+            axis.text.y = element_text(colour = "black",face="plain"))+
+      labs(y=bquote('Normalized Habitat Area in '~m^2/km),x=bquote("Discharge in "~m^3/s))
+  }
+  
+  return(plt)
+}

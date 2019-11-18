@@ -1,10 +1,10 @@
 # This script is used to get suitable habitat that meets substrate type requirements.
-# Last edited by Elaina Passero on 10/18/19
+# Last edited by Elaina Passero on 11/08/19
 
 ### Begin Function ###
-by.substrate <- function(a, good_hab_list, sub_allages,rast_sub_map){
-  pos <- grep(a,names(sub_allages),ignore.case = TRUE)
-  sub_req <- sub_allages[,pos] # substrate requirement for current lifestage
+by.substrate <- function(a, good_hab_list, sub_all_ages,rast_sub_map){
+  pos <- grep(a,names(sub_all_ages),ignore.case = TRUE)
+  sub_req <- sub_all_ages[,pos] # substrate requirement for current lifestage
   sub_req <- as.numeric(sub_req[!is.na(sub_req)]) # remove any NA values
   
   sub_seq <- seq(min(sub_req),max(sub_req)+1,by=1)
