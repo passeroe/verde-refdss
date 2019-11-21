@@ -1,5 +1,5 @@
 # This function make changes to the historic flow record by hydroperiod
-# Last edited by Elaina Passero 11/04/19
+# Last edited by Elaina Passero 11/18/19
 
 ### Define Function
 alter.hydrograph <- function(hydrograph_hp,EnforceMed,median_q,fixed_chg,per_chg,hp){
@@ -70,7 +70,8 @@ alter.hydrograph <- function(hydrograph_hp,EnforceMed,median_q,fixed_chg,per_chg
       select(-discharge) %>%
       rename(discharge = revised_q)
   }
-
+  
+  hydrograph_hp$discharge[hydrograph_hp$discharge < 0] <- 0
   
   return(hydrograph_hp)
 }

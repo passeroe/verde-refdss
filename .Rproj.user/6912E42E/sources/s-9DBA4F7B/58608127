@@ -1,0 +1,24 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1574295206913.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "58608127",
+    "lastKnownWriteTime" : 1574295792,
+    "last_content_update" : 1574295792421,
+    "path" : "C:/Users/epassero/Desktop/VRDSS/verde-refdss/make.veg.maps.R",
+    "project_path" : "make.veg.maps.R",
+    "properties" : {
+        "cursorPosition" : "9,16",
+        "scrollLine" : "0",
+        "source_window_id" : "",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 15,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

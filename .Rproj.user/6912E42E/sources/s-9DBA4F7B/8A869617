@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1574295278682.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "8A869617",
+    "lastKnownWriteTime" : 8030597042934194811,
+    "last_content_update" : 1574295278682,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "1919BCF5",
+        "caption" : "rcl_ep",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=rcl_ep&cache_key=1919BCF5",
+        "displayedObservations" : "1689",
+        "environment" : "",
+        "object" : "rcl_ep",
+        "preview" : "0",
+        "totalObservations" : "1689",
+        "variables" : "3"
+    },
+    "relative_order" : 16,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

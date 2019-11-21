@@ -5,7 +5,7 @@
 q.ep.weibull <- function(hydrograph, modeled_q){
   
   # Calculate exceedence probability for flows in scenario
-  flow_scene_ep <- data.frame(discharge = hydrograph$discharge,q_rank=rank(-hydrograph$discharge,ties.method = "min")) # ranks discharges; same values get same ranks
+  flow_scene_ep <- data.frame(discharge = hydrograph["discharge"],q_rank=rank(-hydrograph["discharge"],ties.method = "min")) # ranks discharges; same values get same ranks
   n <- as.numeric(length(flow_scene_ep$discharge))
   flow_scene_ep$EP <- flow_scene_ep$q_rank/(1+n)
   

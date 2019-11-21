@@ -1,0 +1,5 @@
+tall_trees,drgt_tol_shrubs
+exp(B0+B1*x+B2*x^2)/(1+exp(B0+B1*x+B2*x^2)),exp(B0+B1*x)/(1+exp(B0+B1*x))
+-2.4661,0.3163
+466.6628,-122.7203
+-6710.9036,

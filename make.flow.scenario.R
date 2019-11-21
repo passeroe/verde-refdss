@@ -1,5 +1,5 @@
 # This function generates flow scenarios from historic flow record
-# Last edited by Elaina Passero on 10/29/19
+# Last edited by Elaina Passero on 11/18/19
 
 library(dataRetrieval)
 library(tidyr)
@@ -25,6 +25,12 @@ hydrograph <- data.frame(date=dailymean$Date, discharge=dailymean$X_00060_00003)
 hydrograph <- na.omit(fread(paste(reach_wd,"flow_scenarios","/",reach_name,"_hydrograph",".csv",sep=""),
                             header=TRUE, sep = ",",data.table=FALSE))
 hydrograph$date <- as.Date(hydrograph$date, format="%m/%d/%Y")
+
+# to convert from CFS to CMS
+hydrograph <- hydrograph %>%
+  mutate(discharge.cms = discharge*0.02832) %>%
+  select(-discharge) %>%
+  rename(discharge = discharge.cms)
 
 # Inputs
 reach_name <- "USBeasley1" # Should match name of folder with results
@@ -67,13 +73,14 @@ scene_by_hp <- lapply(inputs_hp, function(h){
 names(scene_by_hp) <- hp_names
 
 # create df of flow scenario
-flow_scene <- bind_rows(scene_by_hp)
+flow_scene <- bind_rows(scene_by_hp) %>%
+  arrange(date)
 
 # Save scenario info
 if(SaveScene == "Yes"){
   scene_info <- list(hydroperiods,hp_names,inputs_hp)
   list.save(scene_info,file=paste(reach_wd,"flow_scenarios","/",scene_name,"_inputs",".rdata",sep="")) # inputs
-  write.csv(flow_scene,file=paste(reach_wd,"flow_scenarios","/",reach_name,"_",scene_name,".csv",sep="")) # output
+  write.csv(flow_scene,file=paste(reach_wd,"flow_scenarios","/",reach_name,"_",scene_name,".csv",sep=""),row.names = FALSE) # output
 }
 
 

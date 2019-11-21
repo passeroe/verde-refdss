@@ -1,6 +1,6 @@
 # This script will house the fish processing options and functionality
 # This script will produce area-lookup tables by species for fish
-# Last edited by Elaina Passero on 11/13/19
+# Last edited by Elaina Passero on 11/19/19
 
 # Load required packages
 packages <- c("SDMTools","sp","raster","rgeos","rgdal","sf","spatstat","spdep","tidyverse","rasterVis",
@@ -26,7 +26,7 @@ reach_name <- "USBeasley1" # Should match name of folder with results
 dis_unit <- "cms" #units of discharge
 
 ## Secondary Inputs - Use only if switching between projects
-Check0Flow <- "No" # Yes- Calculate max area for 0-flow scenario and interpolate below min modeled Q
+Check0Flow <- "No" # Yes- Calculate max area for 0-flow scenario and interpolate below min modeled Q. No - 0 flow = 0 area.
 if(Check0Flow=="Yes"){ 
   depth0Flow <- "d_cfs_0m" # raster name for 0 flow depth
 }# end of internal rasterization inputs;
