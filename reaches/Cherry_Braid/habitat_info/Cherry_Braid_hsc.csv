@@ -1,8 +1,8 @@
 ,depthmin,depthmax,velocitymin,velocitymax
 adult_longfindace,0.08,0.55,0,0.3
 adult_yellowbullhead,0.1,1.7,0,0.3
-adult_desertsucker,0.11,0.45,0,0.35
-adult_sonoransucker,0.13,0.6,0.03,0.5
+adult_desertsucker,0.11,0.6,0,0.5
+adult_sonorasucker,0.13,0.6,0.03,0.5
 adult_redshiner,0.11,0.45,0,0.35
 adult_roundtailchub,0.14,0.65,0,0.3
 adult_greensunfish,0.18,1.7,0,0.2

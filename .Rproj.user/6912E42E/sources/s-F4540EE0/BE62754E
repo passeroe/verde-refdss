@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1574448988804.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3554280795",
+    "id" : "BE62754E",
+    "lastKnownWriteTime" : 1574449253,
+    "last_content_update" : 1574449253467,
+    "path" : "C:/Users/epassero/Desktop/VRDSS/verde-refdss/exp.rast.R",
+    "project_path" : "exp.rast.R",
+    "properties" : {
+        "cursorPosition" : "26,0",
+        "scrollLine" : "8"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1573489066776.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "D13E595D",
+    "lastKnownWriteTime" : 1574461223,
+    "last_content_update" : 1574461223205,
+    "path" : "C:/Users/epassero/Desktop/VRDSS/verde-refdss/fish.processing.R",
+    "project_path" : "fish.processing.R",
+    "properties" : {
+        "cursorPosition" : "125,0",
+        "scrollLine" : "103",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1575305300642.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2382680036",
+    "id" : "DB5B1366",
+    "lastKnownWriteTime" : 1574182976,
+    "last_content_update" : 1574182976,
+    "path" : "C:/Users/epassero/Desktop/VRDSS/verde-refdss/interp.table.R",
+    "project_path" : "interp.table.R",
+    "properties" : {
+        "cursorPosition" : "11,2",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

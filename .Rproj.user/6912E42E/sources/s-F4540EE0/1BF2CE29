@@ -1,0 +1,24 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1571694360024.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "1BF2CE29",
+    "lastKnownWriteTime" : 1575325558,
+    "last_content_update" : 1575325558715,
+    "path" : "C:/Users/epassero/Desktop/VRDSS/verde-refdss/post.processing.R",
+    "project_path" : "post.processing.R",
+    "properties" : {
+        "cursorPosition" : "202,0",
+        "docOutlineVisible" : "0",
+        "scrollLine" : "164",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 7,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
