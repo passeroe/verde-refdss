@@ -14,19 +14,20 @@ if (length(setdiff(packages, rownames(installed.packages()))) > 0) {
 lapply(packages,library,character.only=TRUE)
 
 ## Primary Inputs
-wd <- "C:/Users/epassero/Desktop/VRDSS/verde-refdss/" # Project working directory
+#wd <- "C:/Users/epassero/Desktop/VRDSS/verde-refdss/" # Project working directory
+wd <- 'C:/Users/Elaina/Desktop/verde-refdss/'
 #wd <- "/Users/Morrison/Documents/Active Research Projects/Verde REFDSS/verde-refdss/" # Set path to local repository
 setwd(wd)
-hab_mets <- list("Depth","Velocity") #Variables from iRIC calculation result used for habitat analysis - case sensitive!
-reach_name <- "USBeasley1" # Should match name of folder with results
+hab_mets <- list("depth","velocity") #Variables from iRIC calculation result used for habitat analysis - case sensitive!
+reach_name <- "Cherry_Braid" # Should match name of folder with results
 dis_unit <- "cms" #units of discharge
 
 # Yes- external rasters or No- rasterize iRIC results. Inputs required if No.
 LoadExternal <- "No"; if(LoadExternal=="No"){
   skip_num <- 0 # number of rows to skip when reading in raw outputs
-  x_loc <- "X" # field name of X coordinate in model outputs
-  y_loc <- "Y" # field name of y coordinate in model outputs
-  dem <- "VerdeBeasley1Elev.tif" # Name of dem: VerdeBeasley1Elev.tif, smrf_dem_v241.tif, braidallpts_dem.tif, GilaMGnd.tif
+  x_loc <- "x" # field name of X coordinate in model outputs
+  y_loc <- "y" # field name of y coordinate in model outputs
+  dem <- "braidallpts_dem.tif" # Name of dem: VerdeBeasley1Elev.tif, smrf_dem_v241.tif, braidallpts_dem.tif, GilaMGnd.tif
   # Does the resolution of the rasters need to be manually set? If No, dem resolution will be used.
   setRes <- "No"; if(setRes=="Yes"){
     res <- c(1,1)} # resolution of rasters if they need to be manually set
@@ -35,12 +36,13 @@ LoadExternal <- "No"; if(LoadExternal=="No"){
 ## Options - If set to No, inputs are not required for option
 # Yes or No. Choose whether or not to check substrate conditions as part of suitable habitat
 CheckSub <- "Yes"; if(CheckSub=="Yes"){
-  sub_name <- "BeasleyUS_SedThiessenPoly1Dissolved" # shapefile name with no extension BeasleyUS_SedThiessenPoly1Dissolved
-  sub_field <- "ParticalSi"} # name of field in substrate map containing substrate type info; ParticalSi or substrate
+  sub_name <- "sub_dissolve" # shapefile name with no extension BeasleyUS_SedThiessenPoly1Dissolved
+  sub_field <- "substrate"} # name of field in substrate map containing substrate type info; ParticalSi or substrate
 
 
 ### Begin Processing ###
 reach_wd <- paste(wd,"reaches","/",reach_name,"/",sep = "")
+rasterOptions(overwrite = TRUE,tmpdir = paste(reach_wd,"temp/",sep=""))
 pre_outputs <- list()
 
 if(LoadExternal == "No"){
