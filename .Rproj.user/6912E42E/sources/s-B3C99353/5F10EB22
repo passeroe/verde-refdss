@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1575998191928.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "5F10EB22",
+    "lastKnownWriteTime" : 1575911324,
+    "last_content_update" : 1575998191928,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "186CB5A2",
+        "caption" : "hydro_ep",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=hydro_ep&cache_key=186CB5A2",
+        "displayedObservations" : 11072,
+        "environment" : "",
+        "object" : "hydro_ep",
+        "preview" : 0,
+        "totalObservations" : 11072,
+        "variables" : 3
+    },
+    "relative_order" : 36,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}
