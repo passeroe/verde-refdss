@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1579907889836.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "3CDC1FB8",
+    "lastKnownWriteTime" : 28147987303956598,
+    "last_content_update" : 1579907889836,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "CA1596C",
+        "caption" : "sum_all_yrs",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=sum_all_yrs&cache_key=CA1596C",
+        "displayedObservations" : 24,
+        "environment" : "",
+        "object" : "sum_all_yrs",
+        "preview" : 0,
+        "totalObservations" : 24,
+        "variables" : 3
+    },
+    "relative_order" : 42,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

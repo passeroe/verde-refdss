@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1575310969484.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3558283429",
+    "id" : "D537D1CE",
+    "lastKnownWriteTime" : 1579908333,
+    "last_content_update" : 1579908333473,
+    "path" : "C:/Users/epassero/Desktop/VRDSS/verde-refdss/build.10day.tables.R",
+    "project_path" : "build.10day.tables.R",
+    "properties" : {
+        "cursorPosition" : "31,31",
+        "scrollLine" : "11",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 22,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1576096914608.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "626540542",
+    "id" : "82C5F50C",
+    "lastKnownWriteTime" : 1575304274,
+    "last_content_update" : 1575304274,
+    "path" : "C:/Users/epassero/Desktop/VRDSS/verde-refdss/bricks.rc.R",
+    "project_path" : "bricks.rc.R",
+    "properties" : {
+        "cursorPosition" : "24,31",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 41,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

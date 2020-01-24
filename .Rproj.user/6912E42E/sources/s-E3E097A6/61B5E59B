@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1575305027894.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3373374973",
+    "id" : "61B5E59B",
+    "lastKnownWriteTime" : 1579888466,
+    "last_content_update" : 1579888466008,
+    "path" : "C:/Users/epassero/Desktop/VRDSS/verde-refdss/interp.plot.R",
+    "project_path" : "interp.plot.R",
+    "properties" : {
+        "cursorPosition" : "67,47",
+        "scrollLine" : "32"
+    },
+    "relative_order" : 13,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
