@@ -9,7 +9,7 @@ get.results <- function(reach_wd,skip_num,dis_unit){
 # DEM and iRIC calculation results must be in their own folder
 tempwd <- paste(reach_wd,"model_outputs","/",sep = "") 
 # get names of iric output csv files in the working directory
-iric_results <- list.files(path=tempwd,pattern = ".csv") # working directory cannot contain any csv's besides results
+iric_results <- list.files(path=tempwd,pattern = ".csv") # model_outputs should not contain any other CSVs
 
 # Create empty list to contain rasters
 hold_list <- list()

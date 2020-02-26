@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1582568901653.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1677392658",
+    "id" : "D3FCEC8",
+    "lastKnownWriteTime" : 1582581028,
+    "last_content_update" : 1582581028131,
+    "path" : "C:/Users/epassero/Desktop/VRDSS/verde-refdss/map.chg.veg.areas.R",
+    "project_path" : "map.chg.veg.areas.R",
+    "properties" : {
+        "cursorPosition" : "13,1",
+        "scrollLine" : "0",
+        "tempName" : "Untitled2"
+    },
+    "relative_order" : 10,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

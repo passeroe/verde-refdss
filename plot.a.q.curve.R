@@ -1,7 +1,7 @@
 # This function will plot habitat area-discharge curves for all modeled flows
-# Last edited by Elaina Passero on 1/23/20
+# Last edited by Elaina Passero on 2/18/20
 
-plot.a.q.curve <- function(fish_outputs,species_list,a,NormalizeByL,fish_tag){
+plot.a.q.curve <- function(fish_outputs,species_list,a,NormalizeByL,fish_tag,reach_run){
   
   # Gather area-lookup tables for lifestage
   tables <- lapply(species_list, function(species){
@@ -32,6 +32,6 @@ plot.a.q.curve <- function(fish_outputs,species_list,a,NormalizeByL,fish_tag){
             axis.text.y = element_text(colour = "black",face="plain"))+
       labs(y=bquote('Normalized Habitat Area in '~m^2/km),x=bquote("Discharge in "~m^3/s))
   }
-  ggsave(paste(reach_wd,"dss_outputs/figures/",reach_name,"_",fish_tag,"_","_a_q_curves_","all.png",sep=""),plot=plt,width=7, height=5,units = "in")
+  ggsave(paste(reach_wd,"dss_outputs/figures/",reach_run,"_",fish_tag,"_","_a_q_curves_","all.png",sep=""),plot=plt,width=7, height=5,units = "in")
   return(plt)
 }

@@ -1,8 +1,8 @@
 # The function generates plots of total available and normalized habitat area and discharge through the hydrograph
-# Last updated by Elaina Passero on 12/09/19
+# Last updated by Elaina Passero on 2/18/20
 # scales need to be fixed on plots 
 
-interp.plot <- function(inter_tab,NormalizeByL,species,scene_name){
+interp.plot <- function(inter_tab,NormalizeByL,species,scene_name,reach_run){
   
   # one data frame for all lifestages
   if(length(lifestages) > 1){
@@ -65,7 +65,7 @@ interp.plot <- function(inter_tab,NormalizeByL,species,scene_name){
     plt <- list(p_tot)
   }
 
-  ggsave(paste(reach_wd,"dss_outputs/figures/",scene_name,"_",species,"_","full.png",sep=""),plot=plt[[1]],width=7, height=5,units = "in")
+  ggsave(paste(reach_wd,"dss_outputs/figures/",reach_run,"_",scene_name,"_",species,"_","full.png",sep=""),plot=plt[[1]],width=7, height=5,units = "in")
   return(plt)
 }
 
