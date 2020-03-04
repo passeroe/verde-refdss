@@ -1,0 +1,38 @@
+# This is a temporary function will produce 10 day min area time series for single species
+# This is intended to produce presentation quality figures
+# Last edited by Elaina Passero 1/23/20
+
+make.temp.figs <- function(a,species,scene_fish_out,scene_list){
+  
+  # create table of 10-day minimum habitat area that includes all scenarios
+  ten_day_min <- data.frame()
+  for(i in 1:length(scene_list)){
+    avg_mon_area <- scene_fish_out[[i]][[species]][["avg_monthly_area"]][[a]] %>%
+      mutate(scene = names(scene_list)[i])
+    ten_day_min <- bind_rows(ten_day_min,avg_mon_area)
+  }
+  
+  # adds fill date so labels by year can be automatically generated 
+  ten_day_min_pt <- ten_day_min %>%
+    mutate(fill_date = as.Date(paste(year,"-",month,"-15",sep="")))
+  
+  # plot time series of 10 day min area
+  ts_min_plt <- ggplot(ten_day_min_pt,aes(x=fill_date,y=mon_avg_low_area,color=scene))+
+    geom_line()+
+    theme_gray()+
+    theme(text=element_text(size=12,face = "bold"),
+          panel.border = element_rect(fill = NA,size=1),
+          legend.justification = c("right","top"),
+          axis.text.x = element_text(colour = "black",face="plain",angle = 45,hjust=1),
+          axis.text.y = element_text(colour = "black",face="plain"))+
+    labs(y=bquote('Minimum 10-day Habitat Area in '~m^2),x="Year",title=paste(reach_name,", ",species,sep=""),color="")+
+    scale_x_date(date_breaks = "1 year",date_labels = "%Y")
+  ts_min_plt
+  ggsave(paste(species,"_","10day_hab_ts.png",sep=""),width=7, height=5,units = "in")
+  
+  return(ts_min_plt)
+}
+
+
+
+

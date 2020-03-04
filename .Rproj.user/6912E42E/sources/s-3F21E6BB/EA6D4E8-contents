@@ -1,29 +1,26 @@
 # This function will make tables of high probability of occurrence areas by scenario
 # Last edited by Elaina Passero on 2/24/20
 
-make.hp.area.tables <- function(v,high_prob_areas,scene_names){
+make.hp.area.tables <- function(v,high_prob_areas,scene_names,NormalizeByL,reach_length){
   
-  if(NormalizeByL == "Yes"){
-    hp_area_tab <- data.frame()
-  } else {
-    hp_area_tab <- data.frame()
+  calc_hp_area <- function(one_map){ # calculate high probability area
+    cell_size <- xres(one_map)^2
+    sum_cells_scene <- cellStats(one_map,stat='sum',na.rm=TRUE)
+    if(NormalizeByL == "Yes"){
+      area <- data.frame(normalized_area = cell_size*sum_cells_scene/reach_length)
+    }else{
+      area <- data.frame(total_area = cell_size*sum_cells_scene)
+    }
+    return(area)
   }
   
-  for(i in 1:length(scene_names)){
-    scene_name <- scene_names[i]
-    scene_hp_map <- high_prob_areas[[i]]
-    
-    # calculate high probability area
-    cell_size <- xres(scene_hp_map)^2
-    sum_cells_scene <- cellStats(scene_hp_map,stat='sum',na.rm=TRUE)
-    scene_area <- cell_size*sum_cells_scene
-    
-    df_entry <- data.frame(scene_names[i],scene_area)
-    hp_area_tab <- rbind(hp_area_tab,df_entry)
-  }
+  hp_area_list <- map(high_prob_areas,calc_hp_area)
+  names(hp_area_list) <- scene_names
+  all_scene_hp_area_df <- bind_rows(hp_area_list,.id="scene")
   
-  write.csv(hp_area_tab, file = paste(reach_wd, "dss_outputs/",reach_run,"_",veg, "_", v, "_hp_area.csv", sep = ""), append = TRUE)
+  write.csv(all_scene_hp_area_df, file = paste(reach_wd, "dss_outputs/",reach_run,"_","veg", "_", v, "_hp_area.csv", sep = ""), append = TRUE)
   
-  return(hp_area_tab)
+  return(all_scene_hp_area_df)
+
 }
-rm(df_entry)
+

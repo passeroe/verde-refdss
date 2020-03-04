@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1583346294920.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "322769429",
+    "id" : "A660F9BC",
+    "lastKnownWriteTime" : 1583346356,
+    "last_content_update" : 1583346356991,
+    "path" : "C:/Users/epassero/Desktop/VRDSS/verde-refdss/by.substrate.R",
+    "project_path" : "by.substrate.R",
+    "properties" : {
+        "cursorPosition" : "1,41",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 18,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

@@ -1,5 +1,5 @@
 # This script will house the post-processing options and functionality
-# Last edited by Elaina Passero on 02/21/20
+# Last edited by Elaina Passero on 02/26/20
 
 # Load required packages
 packages <- c("SDMTools","sp","raster","rgeos","rgdal","sf","spatstat","spdep","tidyverse","rasterVis",
@@ -46,7 +46,7 @@ DateRange <- "No"; if(DateRange=="Yes"){
   end_date <- "1994-12-31"} # "YYYY-MM-DD"
 
 # Flow scenarios to calculate metrics for 
-scene_names <- c("baseline_q","red_25_percent")
+scene_names <- c("baseline_q","red_25_percent","red_all_q_10")
 
 ### End of User Inputs ###
 
@@ -69,23 +69,30 @@ scene_list <- lapply(scene_names, function(s){
 })
 names(scene_list) <- scene_names
 
+# Load pre.processing outputs
+output_name <- load(file=paste(reach_wd,"dss_outputs/","internal/",reach_run,"_pre_outputs.rdata",sep="")) # load rasterized 2D modeling results
+eval(parse(text=paste("pre_outputs=",output_name)))
+
+out_val_rast <- pre_outputs$out_val_rast
+modeled_q <- pre_outputs$modeled_q
+
 
 # Fish post-processing
-all_post_fish_out <- list()
-all_post_fish_out <- lapply(scene_names, function(scene_name){
+all_fish_post_out <- list()
+all_fish_post_out <- lapply(scene_names, function(scene_name){
   
   s <- scene_list[[scene_name]]
   
   post_fish_outputs <- list()
   post_fish_outputs <- lapply(species_list, function(species){ 
-    one_spec <- fish_outputs[[species]]
-    for(i in 1:length(one_spec)){ # extracts the outputs by species into their own object
-      tempobj = one_spec[[i]]
-      eval(parse(text=paste(names(one_spec)[[i]],"=tempobj")))
-    }
-    
+
     output_name <- load(file=paste(reach_wd,"dss_outputs/","internal/",reach_run,"_",species,"_fish_outputs.rdata",sep="")) # load fish outputs
     eval(parse(text=paste("one_spec=",output_name)))
+    
+     for(i in 1:length(one_spec)){ # extracts the outputs by species into their own object
+       tempobj = one_spec[[i]]
+       eval(parse(text=paste(names(one_spec)[[i]],"=tempobj")))
+     }
     
     # Flow-Scenario related scripts
     source("interp.table.R")
@@ -123,7 +130,7 @@ all_post_fish_out <- lapply(scene_names, function(scene_name){
   
   return(post_fish_outputs)
 }) # end of flow scenario list function
-names(all_post_fish_out) <- names(scene_list)
+names(all_fish_post_out) <- names(scene_list)
 
 
 # Producing Figures for Chris + Dave
@@ -155,13 +162,6 @@ names(all_post_fish_out) <- names(scene_list)
 
 
 # Riparian vegetation post-processing
-output_name <- load(file=paste(reach_wd,"dss_outputs/","internal/",reach_run,"_pre_outputs.rdata",sep="")) # load rasterized 2D modeling results
-eval(parse(text=paste("pre_outputs=",output_name)))
-
-out_val_rast <- pre_outputs$out_val_rast
-modeled_q <- pre_outputs$modeled_q
-
-
 all_veg_post_out <- list()
 all_veg_post_out <- lapply(scene_names, function(scene_name){
   

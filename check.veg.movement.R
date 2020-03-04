@@ -9,23 +9,30 @@ check.veg.movement <- function(wet_map,high_prob_areas,scene_name){
   base_range <- summary(hp_iq_map_base)
   scene_range <- summary(hp_iq_map_scene)
   
-  # describe change in high probability of occurrence areas
-  if(scene_range[2] < base_range[2]){
-    if(scene_range[4] > base_range[4]{
-      movement <- "expand"
-    }) else{movement <- "encroach"}
-  }
+  if(is.na(base_range[1]) == FALSE){ # check that there are high probability of occurrence areas
     
-  if(scene_range[2] > base_range[2]){
-    if(scene_range[4] > base_range[4]{
-      movement <- "retreat"
-    }) else{movement <- "reduce"}
+    # describe change in high probability of occurrence areas
+    if(scene_range[2] < base_range[2]){
+      if(scene_range[4] > base_range[4]){
+        movement <- "expand"
+      } else{movement <- "encroach"}
+    }
+    
+    if(scene_range[2] > base_range[2]){
+      if(scene_range[4] > base_range[4]){
+        movement <- "retreat"
+      } else{movement <- "reduce"}
+    }
+    
+    if(scene_range[2] == base_range[2] && scene_range[4] == base_range[4]){
+      movement <- "not change"
+    }
+  } else{
+    if(is.na(scene_range[1]) == FALSE){
+      movement <- "encroach"
+    }else{
+      movement <- NA
+    }
   }
-  
-  if(scene_range[2] == base_range[2] && scene_range[4] == base_range[4]){
-    movement <- "not change"
-  }
-  
   return(movement)
 }
-

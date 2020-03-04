@@ -1,21 +1,21 @@
 {
     "collab_server" : "",
     "contents" : "",
-    "created" : 1582675477261.000,
+    "created" : 1583358792267.000,
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "2331826620",
-    "id" : "B286418D",
-    "lastKnownWriteTime" : 1582675517,
-    "last_content_update" : 1582675517940,
+    "hash" : "44079029",
+    "id" : "61CC2FB0",
+    "lastKnownWriteTime" : 1583358880,
+    "last_content_update" : 1583358880889,
     "path" : "C:/Users/epassero/Desktop/VRDSS/verde-refdss/.gitignore",
     "project_path" : ".gitignore",
     "properties" : {
-        "cursorPosition" : "11,49",
+        "cursorPosition" : "18,27",
         "scrollLine" : "0"
     },
-    "relative_order" : 14,
+    "relative_order" : 19,
     "source_on_save" : false,
     "source_window" : "",
     "type" : "gitignore"

@@ -1,15 +1,15 @@
 # This function will calculate the percent change from baseline in high probability of occurrence areas
 # Last edited by Elaina Passero 2/24/20
 
-calc.chg.veg.area <- function(hq_area_tab,scene_names){
+calc.chg.veg.area <- function(hp_area_tab,scene_names,NormalizeByL){
   
   scenes <- scene_names[scene_names != "baseline_q"]
   per_chg_hp_tab <- data.frame()
   for(j in 1:length(scenes)){
-    scene_name <- names(scenes)[[j]]
+    scene_name <- scenes[j]
     
     if(NormalizeByL == "Yes"){
-      wide_tab <- hq_area_tab %>%
+      wide_tab <- hp_area_tab %>%
         filter(scene == "baseline_q" | scene == paste(scene_name)) %>%
         pivot_wider(names_from = scene, values_from = normalized_area)
       

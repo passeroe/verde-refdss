@@ -31,12 +31,17 @@ model_run <- "2.12.20" # Should match end of name of folder with results
 dis_unit <- "cms" #units of discharge
 
 # Flow scenarios to compare to baseline conditions
-scene_names <- c("baseline_q","red_25_percent")
+scene_names <- c("baseline_q","red_25_percent","red_all_q_10")
 
 # Yes or No. Choose whether or not to normalize habitat area by reach length
 NormalizeByL <- "Yes"; if(NormalizeByL=="Yes"){
   reach_length <- 0.5
   length_unit <- "km"}
+
+# Yes or No. Yes - limit analysis to supplied dates. No - consider entire hydrograph.
+DateRange <- "No"; if(DateRange=="Yes"){
+  start_date <- "1974-01-01" # "YYYY-MM-DD"
+  end_date <- "1994-12-31"} # "YYYY-MM-DD"
 
 ### End of User Inputs ###
 
@@ -122,12 +127,12 @@ sum_veg_metrics <- lapply(veg_list, function(v) {
   
   # Tabulate area of high probability of occurrence
   source("make.hp.area.tables.R")
-  hp_area_tab <- make.hp.area.tables(v,high_prob_areas,scene_names)
+  hp_area_tab <- make.hp.area.tables(v,high_prob_areas,scene_names,NormalizeByL,reach_length)
   sum_veg_metrics$hp_area_tab <- hp_area_tab
   
   # Calculate % change in high probability of occurrence areas
   source("calc.chg.veg.area.R")
-  per_chg_hp_tab <- calc.chg.veg.area(hq_area_tab,scene_names,NormalizeByL)
+  per_chg_hp_tab <- calc.chg.veg.area(hp_area_tab,scene_names,NormalizeByL)
   sum_veg_metrics$per_chg_hp_tab <- per_chg_hp_tab
   
   # describe movement of high probability of occurrence areas
@@ -141,3 +146,11 @@ sum_veg_metrics <- lapply(veg_list, function(v) {
 names(sum_veg_metrics) <- veg_list
 
 # Compare scenarios using fish and vegetation metrics
+
+
+
+
+
+
+
+
