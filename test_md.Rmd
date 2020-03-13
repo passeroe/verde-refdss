@@ -1,7 +1,7 @@
 ---
 title: "scenario_eval"
 author: "Elaina Passero"
-date: "February 19, 2020"
+date: "March 9, 2020"
 output: html_document
 ---
 
@@ -12,8 +12,8 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r packages, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
 # Load required packages
 packages <- c("SDMTools","sp","raster","rgeos","rgdal","sf","spatstat","spdep","tidyverse","rasterVis",
-              "ggplot2","data.table","dplyr","spex","stars","igraph","deldir","hydroTSM",
-              "lubridate","rlist")
+              "ggplot2","gridExtra","data.table","dplyr","spex","stars","igraph","deldir","hydroTSM",
+              "lubridate","rlist","ggthemes","ggpubr")
 #  Check to see if each is installed, and install if not.
 if (length(setdiff(packages, rownames(installed.packages()))) > 0) {    
   install.packages(setdiff(packages, rownames(installed.packages())))  
@@ -44,7 +44,7 @@ reach_name <- "USBeasley1" # Should match name of folder with results
 model_run <- "2.12.20" # Should match end of name of folder with results
 dis_unit <- "cms" #units of discharge
 
-# Flow scenarios to compare to baseline conditions
+# Flow scenarios to include. This list should start with "baseline_q"
 scene_names <- c("baseline_q","red_25_percent","red_all_q_10")
 
 # Yes or No. Choose whether or not to normalize habitat area by reach length
@@ -56,6 +56,12 @@ NormalizeByL <- "Yes"; if(NormalizeByL=="Yes"){
 DateRange <- "No"; if(DateRange=="Yes"){
   start_date <- "1974-01-01" # "YYYY-MM-DD"
   end_date <- "1994-12-31"} # "YYYY-MM-DD"
+
+
+fish_names_full <- c("Desert Sucker","Smallmouth Bass")
+veg_names_full <- c("Drought Tolerant Shrubs", "Tall Trees")
+scene_names_full <- c("Baseline","25% Reduction","10% Reduction")
+
 ```
 
 
@@ -77,6 +83,9 @@ scene_list <- lapply(scene_names, function(s){
   return(q_ts)
 })
 names(scene_list) <- scene_names
+
+names(species_list) <- fish_names_full
+names(veg_list) <- veg_names_full
 ```
 
 ## Generating Figures and Tables for Fish 
@@ -97,17 +106,18 @@ post_fish_figs <- lapply(species_list, function(species){
 
   
   source("plot.10day.ts.R")
-  ten_day_ts_plt <- lapply(lifestages, function(a) plot.10day.ts(a,species,scene_fish_out,scene_list,NormalizeByL,post_tag))
+  ten_day_ts_plt <- lapply(lifestages, function(a) plot.10day.ts(a,species,scene_fish_out,scene_list,NormalizeByL,post_tag,
+                                                               scene_names_full))
   names(ten_day_ts_plt) <- lifestages
   post_fish_figs$ten_day_ts_plt <- ten_day_ts_plt 
   
   source("build.10day.tables.R")
-  ten_day_min_outputs <- lapply(lifestages, function(a) build.10day.tables(a,species,scene_list,scene_fish_out,post_tag))
+  ten_day_min_outputs <- lapply(lifestages, function(a) build.10day.tables(a,species,scene_list,scene_fish_out,post_tag,                                                                 scene_names_full))
   names(ten_day_min_outputs) <- lifestages
   post_fish_figs$ten_day_min_outputs <- ten_day_min_outputs
   
   source("make.barplots.chg.R")
-  chg_barplots <- lapply(lifestages, function(a) make.barplots.chg(a,species,ten_day_min_outputs))
+  chg_barplots <- lapply(lifestages, function(a) make.barplots.chg(a,species,ten_day_min_outputs,post_tag,                                                                 scene_names_full))
   names(chg_barplots) <- lifestages
   post_fish_figs$chg_barplots <- chg_barplots
   
@@ -131,27 +141,31 @@ names(fish_pc_builder) <- species_list
 fish_pc_tab <- bind_rows(fish_pc_builder,.id = "species") %>%
   filter(scene != "baseline_q") %>%
   mutate(criteria = ifelse(species %in% native_list,"native","non-native"))
+
 ```
 
 ### Fish Figures
-```{r fish_figs, echo=FALSE, message=FALSE, warning=FALSE}
+```{r fish_figs, echo=FALSE, message=FALSE, warning=FALSE,results='hide',fig.keep='all'}
 # load barplots of % change
 plot.bars <- function(one_fish_metrics,title){
   one_fish_metrics$chg_barplots
 }
 
-map2(post_fish_figs,species_list,plot.bars) # this is producing a message that will not go away
+map2(post_fish_figs,species_list,plot.bars)
 
 # plots of % change by for single species (all lifestages) faceted by scenario
-ggplot(data = fish_pc_tab, aes(x = month, y = per_chg, fill = species, alpha= lifestage))+
+ggplot(data = fish_pc_tab, aes(x = month, y = per_chg, fill = species,alpha = lifestage))+
+  theme_few()+
+  scale_fill_brewer(palette = "Set1")+
   geom_bar(stat = "identity",position = "dodge")+
   theme(legend.position = "bottom")+
-  facet_wrap(vars(scene),dir = "v")+
+  facet_wrap(vars(scene),dir = "v",labeller = as_labeller(scene_names_full))+
   scale_x_continuous(breaks=c(1,2,3,4,5,6,7,8,9,10,11,12),
                      labels = c("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"))+
-  scale_alpha_discrete(range = c(0.35,1))+
+  {if(length(lifestages)>1) scale_alpha_discrete(range = c(1,0.35))}+
+  {if(length(lifestages)==1) scale_alpha_discrete(guide="none")}+
   ylab("percent change")
-
+  
 
 ```
 
@@ -203,19 +217,21 @@ names(sum_veg_metrics) <- veg_list
 ```
 
 ### Vegetation Figures
-```{r veg_figs, echo = FALSE}
+```{r veg_figs, echo = FALSE,results='hide',fig.keep='all'}
 # Show maps of high probability of occurrence areas
 plot.rast <- function(one_veg_metrics,title){
-  one_veg_stack <- stack(one_veg_metrics$high_prob_areas) # stacks all scenarios for a single species
-  spplot(one_veg_stack,main=title)
+  one_veg_stack <- stack(one_veg_metrics$high_prob_areas) # stacks all scenarios for a single guild
+  lpt <- levelplot(one_veg_stack,margin = FALSE,
+            region = TRUE,
+            scales=list(draw=FALSE),
+            at = c(-1,.5,1.5),
+            col.regions = c("grey","black"),
+            colorkey = FALSE)
+  return(lpt)
 }
-
-map2(sum_veg_metrics,veg_list,plot.rast) # this is producing a message that will not go away
-
-# need to get all on the same scales
-
+map2(sum_veg_metrics,veg_list,plot.rast)
 ```
-
+Maps of high probability of occurrence areas (black).
 
 ## Combination Figures
 
@@ -265,22 +281,29 @@ fish_chg_mean <- fish_pc_tab %>%
 ### Display Figures
 ```{r combo_figs, echo=FALSE, message=FALSE, warning=FALSE}
 # plotting fish only - mean
-ggplot(data = fish_chg_mean, aes(x = reorder(group,per_chg), y = per_chg, fill = criteria, alpha = lifestage))+
+f_plt <- ggplot(data = fish_chg_mean, aes(x = reorder(group,per_chg), y = per_chg, fill = criteria, alpha = lifestage))+
+  theme_few()+
+  scale_fill_brewer(palette = "Set1")+
   geom_bar(stat = "identity",position = "dodge")+
   coord_flip()+
-  theme(legend.position = "bottom")+
+  theme(legend.position = "right")+
   facet_wrap(vars(scene),dir = "v")+
-  scale_alpha_discrete(range = c(0.35,1))+
+  scale_alpha_discrete(range = c(1,0.35))+
   xlab(element_blank())+
   ylab("percent change")
 
 # plotting vegetation only
-ggplot(data = veg_summary_tab, aes(x = reorder(group,per_chg), y = per_chg, fill = criteria))+
+v_plt <- ggplot(data = veg_summary_tab, aes(x = reorder(group,per_chg), y = per_chg, fill = criteria))+
+  theme_few()+
+  scale_fill_brewer(palette = "Set1")+
   geom_bar(stat = "identity")+
   coord_flip()+
-  theme(legend.position = "bottom")+
+  theme(legend.position = "right")+
   facet_wrap(vars(scene),dir = "v")+
   xlab(element_blank())+
   ylab("percent change")
+
+plts <- ggarrange(f_plt,v_plt,labels = c("A","B"),ncol = 1)
+plts
 ```
 

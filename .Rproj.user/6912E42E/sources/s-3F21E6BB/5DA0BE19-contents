@@ -1,0 +1,12 @@
+
+
+
+test_list <- lapply(species_list, function(species){
+  a_plt <- plot(s$date,s$discharge,main = paste(names(species)))
+  return(a_plt)
+})
+
+
+rm(species)
+
+
