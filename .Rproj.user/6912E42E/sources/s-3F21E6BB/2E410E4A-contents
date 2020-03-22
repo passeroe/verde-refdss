@@ -9,14 +9,14 @@ plot.10day.ts <- function(a,species,scene_fish_out,scene_list,NormalizeByL,post_
   ten_day_min <- data.frame()
   for(i in 1:length(scene_list)){
     avg_mon_area <- scene_fish_out[[i]][["avg_monthly_area"]][[a]] %>%
-      mutate(scene = names(scene_list)[i])
+      mutate(scene = names(scene_list)[i]) %>%
+      mutate(scene_name_full = scene_names_full[i])
     ten_day_min <- bind_rows(ten_day_min,avg_mon_area)
   }
   
   # making automatic labeling more readable
   ten_day_min_pt <- ten_day_min %>%
-    mutate(fill_date = as.Date(paste(year,"-",month,"-15",sep=""))) %>%
-    mutate(scene_name_full = scene_names_full)
+    mutate(fill_date = as.Date(paste(year,"-",month,"-15",sep="")))
   
   if(NormalizeByL == "Yes"){
     # plot time series of 10 day min area
@@ -28,7 +28,7 @@ plot.10day.ts <- function(a,species,scene_fish_out,scene_list,NormalizeByL,post_
             legend.justification = c("right","top"),
             axis.text.x = element_text(colour = "black",face="plain",angle = 45,hjust=1),
             axis.text.y = element_text(colour = "black",face="plain"))+
-      labs(y=bquote('Minimum 10-day Habitat Area (Normalized)'),x="Year",title=paste(reach_name,", ",name(species),sep=""),color="")+
+      labs(y=bquote('Minimum 10-day Habitat Area (Normalized)'),x="Year",title=paste(reach_name,", ",names(species),sep=""),color="")+
       scale_x_date(date_labels = "%Y")
   } else{
     # plot time series of 10 day min area
