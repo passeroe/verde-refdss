@@ -22,7 +22,7 @@ wd <- "C:/Users/epassero/Desktop/VRDSS/verde-refdss/" # Project working director
 setwd(wd)
 hab_mets <- list("Depth","Velocity") #,"Velocity","WaterSurfaceElevation") #Variables from iRIC calculation result used for habitat analysis - case sensitive!
 reach_name <- "USBeasley1" # Reach of interest
-model_run <- "jmethod" # Should match end of name of folder with results
+model_run <- "2.12.20" # Should match end of name of folder with results
 dis_unit <- "cms" #units of discharge
 
 # Yes- external rasters or No- rasterize iRIC results. Inputs required if No.

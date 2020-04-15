@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1582134463553.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "80D35D09",
+    "lastKnownWriteTime" : 1586803518,
+    "last_content_update" : 1586803518315,
+    "path" : "C:/Users/epassero/Desktop/VRDSS/verde-refdss/test_md.Rmd",
+    "project_path" : "test_md.Rmd",
+    "properties" : {
+        "cursorPosition" : "306,2",
+        "last_setup_crc32" : "C5156030bb338d19",
+        "scrollLine" : "282",
+        "source_window_id" : "",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 13,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}
