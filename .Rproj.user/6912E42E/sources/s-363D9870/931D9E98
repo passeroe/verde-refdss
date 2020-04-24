@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1587404644044.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2804754117",
+    "id" : "931D9E98",
+    "lastKnownWriteTime" : 1571412533,
+    "last_content_update" : 1571412533,
+    "path" : "C:/Users/epassero/Desktop/VRDSS/verde-refdss/find.hsc.R",
+    "project_path" : "find.hsc.R",
+    "properties" : {
+        "cursorPosition" : "2,0",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 20,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

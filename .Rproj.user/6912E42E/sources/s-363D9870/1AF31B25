@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1586834480619.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3069106232",
+    "id" : "1AF31B25",
+    "lastKnownWriteTime" : 1586834776,
+    "last_content_update" : 1586834776007,
+    "path" : "C:/Users/epassero/Desktop/VRDSS/verde-refdss/plot.a.q.curve.R",
+    "project_path" : "plot.a.q.curve.R",
+    "properties" : {
+        "cursorPosition" : "17,18",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 15,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
