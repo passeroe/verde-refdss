@@ -1,0 +1,19 @@
+"0","# Show maps of high probability of occurrence areas
+plot.rast <- function(one_veg_metrics,title){
+  one_veg_stack <- stack(one_veg_metrics$high_prob_areas) # stacks all scenarios for a single guild
+  levelplot(one_veg_stack,margin = FALSE,
+            region = TRUE,
+            at = c(-1,.5,1.5),
+            col.regions = c(""grey"",""black""),
+            colorkey = FALSE)
+}
+map2(sum_veg_metrics,veg_list,plot.rast) # this is producing a message that will not go away
+"
+"1","$drgt_tol_shrubs
+"
+"1","
+"
+"1","$tall_trees
+"
+"1","
+"

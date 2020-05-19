@@ -1,5 +1,5 @@
 tall_trees,drgt_tol_shrubs,popufre,prosvel,saligoo
-exp(B0+B1*x+B2*x^2)/(1+exp(B0+B1*x+B2*x^2)),exp(B0+B1*x)/(1+exp(B0+B1*x)),exp(B0+B1*x+B2*x^2)/(1+exp(B0+B1*x+B2*x^2)),exp(B0+B1*x)/(1+exp(B0+B1*x)),exp(B0+B1*x+B2*x2)/(1+exp(B0+B1*x+B2*x2))
+exp(B0+B1*x+B2*x^2)/(1+exp(B0+B1*x+B2*x^2)),exp(B0+B1*x)/(1+exp(B0+B1*x)),exp(B0+B1*x+B2*x^2)/(1+exp(B0+B1*x+B2*x^2)),exp(B0+B1*x)/(1+exp(B0+B1*x)),exp(B0+B1*x+B2*x^2)/(1+exp(B0+B1*x+B2*x^2))
 -2.571,-0.4863,-2.2346,-0.6529,-2.6606
 378.7081,-25.8922,141.399,-31.6944,225.7538
 -4197.6702,,-1517.1617,,-2603.9905

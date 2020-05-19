@@ -28,7 +28,7 @@ DateRange <- "No"; if(DateRange=="Yes"){
   end_date <- "2018-12-31"} # "YYYY-MM-DD"
 
 
-hydrograph <- na.omit(fread(paste(reach_wd,"flow_scenarios","/",reach_name,"_hydrograph",".csv",sep=""),
+hydrograph <- na.omit(fread(paste(reach_wd,"flow_scenarios","/",reach_name,"_baseline_q",".csv",sep=""),
                             header=TRUE, sep = ",",data.table=FALSE))
 hydrograph$date <- as.Date(hydrograph$date, format="%m/%d/%Y")
 if(DateRange=="Yes"){
@@ -51,21 +51,22 @@ dis_unit <- "cms" #units of discharge
 # Yes or No. Choose whether to save flow scenario
 SaveScene <- "Yes" 
 if(SaveScene == "Yes"){
-  scene_name <- "red_all_q_10"
+  scene_name <- "scenario_A"
 }
 
 hydroperiods <- c("03-19","06-01","09-01","12-01") # the start dates (mm-dd) of each hydroperiod
 hp_names <- c("spring","summer","fall","winter")
+
 
 ## Add inputs in the following order: hydroperiod name, enforce median (y/n), 
 # median discharge for season (put NA if not enforcing median), 
 # fixed change (withdrawal or return flow), percent change in flow as a decimal (+/-) 
 
 inputs_hp <- list(
-  spring <- list("spring","No",NA,0,-.1),
-  summer <- list("summer","No",NA,0,-.1),
-  fall <- list("fall","No",NA,0,-.1),
-  winter <- list("winter","No",NA,0,-.1)
+  spring <- list("spring","Yes",4.47,0,-.25),
+  summer <- list("summer","Yes",4.47,0,-.25),
+  fall <- list("fall","Yes",4.47,0,-.25),
+  winter <- list("winter","Yes",4.47,0,-.25)
 )
 
 # add hydroperiods to hydrograph
