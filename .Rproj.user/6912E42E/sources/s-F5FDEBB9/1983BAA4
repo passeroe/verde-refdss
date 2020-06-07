@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1591221992389.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "1983BAA4",
+    "lastKnownWriteTime" : 32651513914720368,
+    "last_content_update" : 1591221992389,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "A32F798D",
+        "caption" : "fish_pc_tab",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=fish_pc_tab&cache_key=A32F798D",
+        "displayedObservations" : 144,
+        "environment" : "",
+        "object" : "fish_pc_tab",
+        "preview" : 0,
+        "totalObservations" : 144,
+        "variables" : 7
+    },
+    "relative_order" : 28,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

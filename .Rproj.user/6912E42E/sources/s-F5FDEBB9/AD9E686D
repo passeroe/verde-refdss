@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1591112393111.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "AD9E686D",
+    "lastKnownWriteTime" : 32651513914720368,
+    "last_content_update" : 1591112393111,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "9054B406",
+        "caption" : "ts.form",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=ts.form&cache_key=9054B406",
+        "displayedObservations" : 11028,
+        "environment" : "",
+        "object" : "ts.form",
+        "preview" : 0,
+        "totalObservations" : 11028,
+        "variables" : 2
+    },
+    "relative_order" : 14,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

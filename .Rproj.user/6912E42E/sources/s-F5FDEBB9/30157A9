@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1591039379025.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2247963595",
+    "id" : "30157A9",
+    "lastKnownWriteTime" : 1588191826,
+    "last_content_update" : 1588191826,
+    "path" : "C:/Users/epassero/Desktop/VRDSS/verde-refdss/make.flow.scenario.R",
+    "project_path" : "make.flow.scenario.R",
+    "properties" : {
+        "cursorPosition" : "86,0",
+        "scrollLine" : "54",
+        "tempName" : "Untitled2"
+    },
+    "relative_order" : 15,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

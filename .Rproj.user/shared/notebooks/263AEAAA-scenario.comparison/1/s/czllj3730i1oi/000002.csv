@@ -1,5 +1,0 @@
-"0","fish_chg_mean <- fish_chg_mean %>%
-  mutate(plt_order = ifelse(species %in% native_list,1,2))  #non-natives plotted at the end 
-"
-"2","Error in species %in% native_list : object 'species' not found
-"

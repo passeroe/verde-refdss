@@ -1,0 +1,33 @@
+# inspect time series to pick example month
+
+baseline <- scene_list$baseline_q
+scenario_a <- scene_list$scenario_A
+scenario_b <- scene_list$scenario_B
+
+
+
+plot_ly(baseline, x = ~date, y = ~discharge)%>%
+  add_trace(y = ~scenario_a$discharge,type = 'scatter', mode = 'lines',name = "A") %>%
+  add_trace(y = ~scenario_b$discharge,type = 'scatter', mode = 'lines',name = "B") %>%
+  add_trace(type = 'scatter', mode = 'lines',name = "Base")
+
+
+
+
+# getting flow stats from gage
+site_id <- '09506000'
+pCode <- '00060'
+startDate <- "1988-10-22"
+endDate <- "2019-9-30"
+rawDailyQ <- readNWISdv(site_id,pCode,startDate = startDate,endDate = endDate)
+
+ts.form <- ts.format(rawDailyQ,cols=c(3,4),format = "%Y-%m-%d")
+high.spells(ts.form)
+
+mean(ts.form$Q)
+
+
+# checking A-Q curves
+all_a_tab
+plot_ly(all_a_tab, x= ~discharge, y= ~normalized_area, linetype = ~species)%>%
+  add_trace(type = 'scatter',mode = 'lines')

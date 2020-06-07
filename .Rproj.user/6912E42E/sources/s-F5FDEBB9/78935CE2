@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1589241096582.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "78935CE2",
+    "lastKnownWriteTime" : 1591284753,
+    "last_content_update" : 1591284753356,
+    "path" : "C:/Users/epassero/Desktop/VRDSS/verde-refdss/scenario.comparison.Rmd",
+    "project_path" : "scenario.comparison.Rmd",
+    "properties" : {
+        "cursorPosition" : "188,3",
+        "last_setup_crc32" : "F5FDEBB9bb338d19",
+        "scrollLine" : "182",
+        "source_window_id" : "",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 24,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}
