@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1591566415210.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "E2C0D256",
+    "lastKnownWriteTime" : 32651513914720368,
+    "last_content_update" : 1591566415210,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "61A61B1E",
+        "caption" : "veg_summary_tab",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=veg_summary_tab&cache_key=61A61B1E",
+        "displayedObservations" : 10,
+        "environment" : "",
+        "object" : "veg_summary_tab",
+        "preview" : 0,
+        "totalObservations" : 10,
+        "variables" : 5
+    },
+    "relative_order" : 27,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

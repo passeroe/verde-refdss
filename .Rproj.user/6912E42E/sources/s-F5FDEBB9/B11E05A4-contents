@@ -31,3 +31,10 @@ mean(ts.form$Q)
 all_a_tab
 plot_ly(all_a_tab, x= ~discharge, y= ~normalized_area, linetype = ~species)%>%
   add_trace(type = 'scatter',mode = 'lines')
+
+
+# checking EP curves
+plot_ly(base_hydro_ep, x = ~discharge, y = ~EP)%>%
+  add_trace(x=~scenea_hydro_ep$discharge,y = ~scenea_hydro_ep$EP,type = 'scatter', mode = 'lines',name = "A") %>%
+  add_trace(x=~sceneb_hydro_ep$discharge,y = ~sceneb_hydro_ep$EP,type = 'scatter', mode = 'lines',name = "B") %>%
+  add_trace(type = 'scatter', mode = 'lines',name = "Base")

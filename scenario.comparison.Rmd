@@ -273,8 +273,13 @@ veg_m_builder <- lapply(veg_list, function(v){
 names(veg_m_builder) <- veg_list
 veg_m_tab <- bind_rows(veg_m_builder,.id = "group")
 
+# temporary for report
+tt_list <- c("tall_trees","popufre","saligoo")
+veg_names_full <-ordered(c("Prosopsis velutina","Drought Tolerant Shrubs","Tall Trees","Salix gooddingii","Populus fremontii"))
+veg_labs <- c("prosvel"="Prosopsis velutina","drgt_tol_shrubs"="Drought Tolerant Shrubs","tall_trees"="Tall Trees","saligoo"="Salix gooddingii","popufre"="Populus fremontii")
 # add criteria to % change table
-veg_summary_tab <- inner_join(veg_pc_tab,veg_m_tab,by=c("group","scene"))
+veg_summary_tab <- inner_join(veg_pc_tab,veg_m_tab,by=c("group","scene")) %>%
+  mutate(plt_order = ifelse(group %in% tt_list,1,2))
 ```
 
 ```{r combo_fig_fish, echo=FALSE}
@@ -315,12 +320,13 @@ f_plt <- ggplot(data = fish_chg_mean, aes(x = group, y = per_chg,
 
 
 # plotting vegetation only
-v_plt <- ggplot(data = veg_summary_tab, aes(x = group, y = per_chg, fill = criteria))+
+v_plt <- ggplot(data = veg_summary_tab, aes(x = reorder(group,plt_order), y = per_chg, fill = criteria))+
   theme_few()+
   scale_fill_brewer(palette = "Set1")+
   geom_bar(stat = "identity")+
   coord_flip()+
-  scale_x_discrete(labels = veg_names_full)+
+  #scale_x_discrete(labels = unique(veg_summary_tab$group))+
+  scale_x_discrete(labels = veg_labs)+
   theme(legend.position = "right",
         text=element_text(size=14,face = "bold",color = "black"),
         axis.text.x = element_text(colour = "black",face="plain"),

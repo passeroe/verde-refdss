@@ -12,17 +12,17 @@
     "path" : null,
     "project_path" : null,
     "properties" : {
-        "cacheKey" : "F5B99D17",
+        "cacheKey" : "FD96097C",
         "caption" : "base_hydro_ep",
-        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=base_hydro_ep&cache_key=F5B99D17",
-        "displayedObservations" : 1751,
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=base_hydro_ep&cache_key=FD96097C",
+        "displayedObservations" : "1751",
         "environment" : "",
         "object" : "base_hydro_ep",
-        "preview" : 0,
-        "totalObservations" : 1751,
-        "variables" : 2
+        "preview" : "0",
+        "totalObservations" : "1751",
+        "variables" : "2"
     },
-    "relative_order" : 32,
+    "relative_order" : 7,
     "source_on_save" : false,
     "source_window" : "",
     "type" : "r_dataframe"

@@ -12,17 +12,17 @@
     "path" : null,
     "project_path" : null,
     "properties" : {
-        "cacheKey" : "36081E23",
+        "cacheKey" : "E0F706F6",
         "caption" : "base_range",
-        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=base_range&cache_key=36081E23",
-        "displayedObservations" : 6,
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=base_range&cache_key=E0F706F6",
+        "displayedObservations" : "6",
         "environment" : "",
         "object" : "base_range",
-        "preview" : 0,
-        "totalObservations" : 6,
-        "variables" : 1
+        "preview" : "0",
+        "totalObservations" : "6",
+        "variables" : "1"
     },
-    "relative_order" : 31,
+    "relative_order" : 30,
     "source_on_save" : false,
     "source_window" : "",
     "type" : "r_dataframe"

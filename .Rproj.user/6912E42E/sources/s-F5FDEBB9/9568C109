@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1591632535011.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "9568C109",
+    "lastKnownWriteTime" : 0,
+    "last_content_update" : 1591632535011,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "3DF1D347",
+        "caption" : "scenea_hydro_ep",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=scenea_hydro_ep&cache_key=3DF1D347",
+        "displayedObservations" : 1695,
+        "environment" : "",
+        "object" : "scenea_hydro_ep",
+        "preview" : 0,
+        "totalObservations" : 1695,
+        "variables" : 2
+    },
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

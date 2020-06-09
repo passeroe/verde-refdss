@@ -36,3 +36,4 @@ check.veg.movement <- function(wet_map,high_prob_areas,scene_name){
   }
   return(movement)
 }
+

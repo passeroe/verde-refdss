@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1591632886429.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "EBC35A1C",
+    "lastKnownWriteTime" : 32651513914720368,
+    "last_content_update" : 1591632886429,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "458CB86F",
+        "caption" : "sceneb_hydro_ep",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=sceneb_hydro_ep&cache_key=458CB86F",
+        "displayedObservations" : 1752,
+        "environment" : "",
+        "object" : "sceneb_hydro_ep",
+        "preview" : 0,
+        "totalObservations" : 1752,
+        "variables" : 2
+    },
+    "relative_order" : 35,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}
