@@ -1,7 +1,7 @@
 ---
 title: "scenario_eval"
 author: "Elaina Passero"
-date: "May 26, 2020"
+date: "June 9, 2020"
 output: html_document
 ---
 
@@ -31,17 +31,14 @@ lapply(packages,library,character.only=TRUE)
 post_tag <- "fin2" # unique code to identify current run of DSS
 
 wd <- "C:/Users/epassero/Desktop/VRDSS/verde-refdss/" # Project working directory
-#wd <- "/Users/Morrison/Documents/Active Research Projects/Verde REFDSS/verde-refdss/" # Set path to local repository
 setwd(wd)
 
 hab_mets <- list("Depth","Velocity") #Variables from iRIC calculation result used for habitat analysis - case sensitive
-#species_list <- c("longfindace","desertsucker") #"sonoransucker") #"yellowbullhead", "sonoransucker","redshiner","roundtailchub","greensunfish","fatheadminnow","speckleddace")
 species_list <- c("Desert_Sucker","Sonora_Sucker","Roundtail_Chub","Speckled_Dace",
                   "Smallmouth-Redeye_Bass","Red_Shiner") # species list 
 native_list <- c("Desert_Sucker","Sonora_Sucker","Roundtail_Chub","Speckled_Dace") # list of native fish species in species_list
 lifestages <- list("adult") #lifestages from oldest to youngest; must match order in HSC table
 veg_list <- c("drgt_tol_shrubs","tall_trees","popufre","prosvel","saligoo") # vegetation group list
-#veg_list <- c("tall_trees","popufre") # vegetation group list
 reach_name <- "USBeasley1" # Should match name of folder with results
 model_run <- "2.12.20" # Should match end of name of folder with results
 dis_unit <- "cms" #units of discharge
@@ -59,9 +56,6 @@ NormalizeByL <- "Yes"; if(NormalizeByL=="Yes"){
 DateRange <- "No"; if(DateRange=="Yes"){
   start_date <- "1974-01-01" # "YYYY-MM-DD"
   end_date <- "1994-12-31"} # "YYYY-MM-DD"
-
-# Plotting Labels. Labels need to match the order of veg_list and scene_names.
-scene_names_full <- c("Baseline","Scenario A","Scenario B")
 
 ```
 
@@ -159,11 +153,6 @@ fish_pc_tab <- fish_pc_tab %>%
 fish_pc_tab$species <- as.factor(fish_pc_tab$species)
 
 
-# label for report remove later
-fish_labels <- c("Desert Sucker","Roundtail Chub","Sonora Sucker","Speckled Dace",
-                  "Red Shiner","Smallmouth-Redeye Bass") # species list 
-scene_labs <- c("scenario_A"="Scenario A","scenario_B"="Scenario B")
-
 # plots of % change by species (all lifestages) faceted by scenario
 chg_f_plt <- ggplot(data = fish_pc_tab, aes(x = factor(month), y = per_chg, 
                                fill = reorder(species,plt_order), alpha = lifestage))+
@@ -174,8 +163,7 @@ chg_f_plt <- ggplot(data = fish_pc_tab, aes(x = factor(month), y = per_chg,
         text=element_text(size=14,face = "bold",color = "black"),
         axis.text.x = element_text(colour = "black",face="plain"),
           axis.text.y = element_text(colour = "black",face="plain"))+
-  #facet_wrap(vars(scene),dir = "v",labeller = labeller(scene =scene_list))+
-  facet_wrap(vars(scene),dir = "v",labeller = labeller(scene = scene_labs))+ # temporary for report
+  facet_wrap(vars(scene),dir = "v")+
   scale_x_discrete(breaks=c(1,2,3,4,5,6,7,8,9,10,11,12),
                      labels = c("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"))+
   {if(length(lifestages)>1) scale_alpha_discrete(range = c(1,0.35))}+
@@ -273,13 +261,8 @@ veg_m_builder <- lapply(veg_list, function(v){
 names(veg_m_builder) <- veg_list
 veg_m_tab <- bind_rows(veg_m_builder,.id = "group")
 
-# temporary for report
-tt_list <- c("tall_trees","popufre","saligoo")
-veg_names_full <-ordered(c("Prosopsis velutina","Drought Tolerant Shrubs","Tall Trees","Salix gooddingii","Populus fremontii"))
-veg_labs <- c("prosvel"="Prosopsis velutina","drgt_tol_shrubs"="Drought Tolerant Shrubs","tall_trees"="Tall Trees","saligoo"="Salix gooddingii","popufre"="Populus fremontii")
 # add criteria to % change table
-veg_summary_tab <- inner_join(veg_pc_tab,veg_m_tab,by=c("group","scene")) %>%
-  mutate(plt_order = ifelse(group %in% tt_list,1,2))
+veg_summary_tab <- inner_join(veg_pc_tab,veg_m_tab,by=c("group","scene"))
 ```
 
 ```{r combo_fig_fish, echo=FALSE}
@@ -311,8 +294,7 @@ f_plt <- ggplot(data = fish_chg_mean, aes(x = group, y = per_chg,
         text=element_text(size=14,face = "bold",color = "black"),
         axis.text.x = element_text(colour = "black",face="plain"),
           axis.text.y = element_text(colour = "black",face="plain"))+
-  #facet_wrap(vars(scene),dir = "v",labeller = labeller(scene =scene_names_full))+
-    facet_wrap(vars(scene),dir = "v",labeller = labeller(scene =scene_labs))+ # temp for report
+  facet_wrap(vars(scene),dir = "v")+
   {if(length(lifestages)>1) scale_alpha_discrete(range = c(1,0.35))}+
   {if(length(lifestages)==1) scale_alpha_discrete(guide="none",range = c(1,1))}+
   xlab(element_blank())+
@@ -320,19 +302,16 @@ f_plt <- ggplot(data = fish_chg_mean, aes(x = group, y = per_chg,
 
 
 # plotting vegetation only
-v_plt <- ggplot(data = veg_summary_tab, aes(x = reorder(group,plt_order), y = per_chg, fill = criteria))+
+v_plt <- ggplot(data = veg_summary_tab, aes(x = group, y = per_chg, fill = criteria))+
   theme_few()+
   scale_fill_brewer(palette = "Set1")+
   geom_bar(stat = "identity")+
   coord_flip()+
-  #scale_x_discrete(labels = unique(veg_summary_tab$group))+
-  scale_x_discrete(labels = veg_labs)+
   theme(legend.position = "right",
         text=element_text(size=14,face = "bold",color = "black"),
         axis.text.x = element_text(colour = "black",face="plain"),
           axis.text.y = element_text(colour = "black",face="plain"))+
-  #facet_wrap(vars(scene),dir = "v",labeller = labeller(scene =scene_names_full))+
-    facet_wrap(vars(scene),dir = "v",labeller = labeller(scene =scene_labs))+ # temp for report
+  facet_wrap(vars(scene),dir = "v")+
   xlab(element_blank())+
   ylab("% Change in Habitat Area")
 

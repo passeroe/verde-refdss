@@ -1,5 +1,5 @@
 # This script will house the post-processing options and functionality
-# Last edited by Elaina Passero on 05/26/20
+# Last edited by Elaina Passero on 6/9/20
 
 # Load required packages
 packages <- c("SDMTools","sp","raster","rgeos","rgdal","sf","spatstat","spdep","tidyverse","rasterVis",
@@ -14,18 +14,14 @@ lapply(packages,library,character.only=TRUE)
 ###########################################
 
 # User inputs
-
 wd <- "C:/Users/epassero/Desktop/VRDSS/verde-refdss/" # Project working directory
-#wd <- "/Users/Morrison/Documents/Active Research Projects/Verde REFDSS/verde-refdss/" # Set path to local repository
 setwd(wd)
 
 hab_mets <- list("Depth","Velocity") #Variables from iRIC calculation result used for habitat analysis - case sensitive
-#species_list <- c("longfindace","desertsucker") #"sonoransucker") #"yellowbullhead", "sonoransucker","redshiner","roundtailchub","greensunfish","fatheadminnow","speckleddace")
 species_list <- c("Desert_Sucker","Sonora_Sucker","Roundtail_Chub","Speckled_Dace",
                   "Smallmouth-Redeye_Bass","Red_Shiner") # species list 
 lifestages <- list("adult") #lifestages from oldest to youngest; must match order in HSC table
 veg_list <- c("drgt_tol_shrubs","tall_trees","popufre","prosvel","saligoo") # vegetation group list
-#veg_list <- c("drgt_tol_shrubs") # vegetation group list
 reach_name <- "USBeasley1" # Should match name of folder with results
 model_run <- "2.12.20" # Should match end of name of folder with results
 dis_unit <- "cms" #units of discharge
@@ -49,7 +45,6 @@ DateRange <- "No"; if(DateRange=="Yes"){
   end_date <- "1994-12-31"} # "YYYY-MM-DD"
 
 # Flow scenarios to calculate metrics for 
-#scene_names <- c("baseline_q","red_25_percent","red_all_q_10")
 scene_names <- c("baseline_q","scenario_A","scenario_B")
 
 ### End of User Inputs ###

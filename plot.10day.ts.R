@@ -1,6 +1,6 @@
 # This function will produce 10 day minimum monthly habitat area time series for a single fish species and lifestage.
 # All scenarios are displayed on one plot. Note the units of area are assumed to be 
-# Last edited by Elaina Passero 4/12/20
+# Last edited by Elaina Passero 6/11/20
 
 plot.10day.ts <- function(a,species,scene_fish_out,scene_list,NormalizeByL,post_tag){
   
@@ -42,7 +42,8 @@ plot.10day.ts <- function(a,species,scene_fish_out,scene_list,NormalizeByL,post_
       labs(y=bquote('Minimum 10-day Habitat Area'),x="Year",title=paste(reach_name,", ",name(species),sep=""),color="")+
       scale_x_date(date_labels = "%Y")
   }
-  ggsave(paste(reach_wd,"dss_outputs/figures/",post_tag,"_",species,"_",a,"_","10day_hab_ts.png",sep=""),width=7, height=5,units = "in")
+  ggsave(paste(reach_wd,"dss_outputs/figures/",post_tag,"_",species,"_",a,"_","10day_hab_ts.jpg",sep=""),
+         width=7, height=5,units = "in",dpi = 300)
   return(ts_min_plt)
 }
 

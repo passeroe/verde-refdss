@@ -1,5 +1,5 @@
 # This function will plot habitat area-discharge curves for in channel flows
-# Last edited by Elaina Passero on 6/3/20
+# Last edited by Elaina Passero on 6/12/20
 
 plot.a.q.curve.in.chan <- function(fish_outputs,species_list,a,NormalizeByL,fish_tag,reach_run,native_list){
   
@@ -10,7 +10,7 @@ plot.a.q.curve.in.chan <- function(fish_outputs,species_list,a,NormalizeByL,fish
   names(tables) <- species_list
   
   all_a_tab <- bind_rows(tables,.id = "species") %>%
-    filter(discharge <= 500)
+    filter(discharge <= 8.5)
   
   # plot in the same order as written in inputs
   all_a_tab$species <- ordered(all_a_tab$species)
@@ -39,7 +39,7 @@ plot.a.q.curve.in.chan <- function(fish_outputs,species_list,a,NormalizeByL,fish
             axis.text.y = element_text(colour = "black",face="plain"))+
       labs(y=bquote('Normalized Habitat Area in '~m^2/km),x=bquote("Discharge in "~m^3/s))
   }
-  ggsave(paste(reach_wd,"dss_outputs/figures/",reach_run,"_",fish_tag,"_","_a_q_curves_","inchannel.png",sep=""),
-         plot=plt,width=8, height=5,units = "in")
+  ggsave(paste(reach_wd,"dss_outputs/figures/",reach_run,"_",fish_tag,"_a_q_curves_","inchannel.jpg",sep=""),
+         plot=plt,width=8, height=5,units = "in",dpi = 300)
   return(plt)
 }
